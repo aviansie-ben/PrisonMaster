@@ -10,7 +10,7 @@ class Prison(db.Model):
     def __repr__(self):
         return '<Prison ' + id + '>'
 
-class Prisoner(db.model)
+class Prisoner(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.Unicode(64))
 	last_name = db.Column(db.Unicode(64))
@@ -19,14 +19,14 @@ class Prisoner(db.model)
 	def __repr__(self):
 		return '<Prisoner ' + id + '>'
 
-class Cell(db.model)
+class Cell(db.Model):
 	capacity = db.Column(db.Integer)
-	number = db.Column(db.Integer)
+	number = db.Column(db.Integer, primary_key=True)
 	
 	def __repr__(self):
 		return '<Cell ' + number + '>'
 		
-class UserAccount(db.model)
+class UserAccount(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.Unicode(64), index=True, unique=True)
 	is_active = db.Column(db.Boolean())
@@ -35,7 +35,7 @@ class UserAccount(db.model)
 	def __repr__(self):
 		return '<User Account ' + id + '>'
 
-class Employee(db.model)
+class Employee(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	security_clearance = db.Column(db.Integer)
 	position = db.Column(db.UnicodeText)
@@ -45,7 +45,7 @@ class Employee(db.model)
 	def __repr__(self):
 		return '<Employee ' + id + '>'
 
-class AccessCard(db.model)
+class AccessCard(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	security_clearance = db.Column(db.Integer)
 	expiry_date = db.Column(db.Date)
@@ -53,23 +53,23 @@ class AccessCard(db.model)
 	def __repr__(self):
 		return '<Access Card ' + id + '>'
 		
-class AccessLog(db.model)
-	timestamp = db.Column(db.Datetime())
+class AccessLog(db.Model):
+	timestamp = db.Column(db.DateTime(), primary_key=True)
 	
 	def __repr__(self):
 		return '<Access Log ' + timestamp + '>'
 		
-class AccessPoint(db.model)
+class AccessPoint(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	security_clearance = db.Column(db.Integer)
 	
 	def __repr__(self):
 		return '<Access Point ' + id + '>'
 		
-class Schedule(db.model)
+class Schedule(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	time_open = db.Column(db.Datetime())
-	time_close = db.Column(db.Datetime())
+	time_open = db.Column(db.DateTime())
+	time_close = db.Column(db.DateTime())
 	
 	def __repr__(self):
 		return '<Schedule ' + id + '>'
