@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="prisonMaster">
+    <title>Trial Tracker 0.1</title>
+    <head>
+    <!-- BEGIN PAGE STYLES -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <!-- END PAGE STYLES -->
+    </head>
+    <body>
+        <p ng-hide="true">If you are seeing this text then you do not have Javascript enabled in your browser, or your browser does not support the javascript features used by this app. Please turn on Javascript or install a more recent version of your preferred web browser.</p>
+        <pm-nav-bar class="page-header"></pm-nav-bar>
+        <div class="page-container">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div ui-view class="col-md-10"></div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BEGIN PAGE SCRIPTS -->
+        <!-- Angular Components -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-resource.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/api-check/7.5.5/api-check.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-formly/7.3.3/formly.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-formly-templates-bootstrap/6.1.5/angular-formly-templates-bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/angular_client/app/app.min.js"></script>
+        <!-- END PAGE SCRIPTS -->
+    </body>
+</html>
