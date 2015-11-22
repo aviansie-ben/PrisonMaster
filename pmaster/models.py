@@ -1,19 +1,19 @@
 from pmaster import db
 
 class Prison(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Unicode(64), index=True, unique=True)
-    address = db.Column(db.UnicodeText)
-    security_level = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(64), index=True, unique=True, nullable=False)
+    address = db.Column(db.UnicodeText, nullable=False)
+    security_level = db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
         return '<Prison ' + id + '>'
 
 class Prisoner(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.Unicode(64))
-    last_name = db.Column(db.Unicode(64))
-    release_date = db.Column(db.Date())
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    first_name = db.Column(db.Unicode(64), nullable=False)
+    last_name = db.Column(db.Unicode(64), nullable=False)
+    release_date = db.Column(db.Date)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), nullable=False)
     cell_id = db.Column(db.Integer, db.ForeignKey('cell.id'), nullable=False)
     
@@ -24,9 +24,9 @@ class Prisoner(db.Model):
         return '<Prisoner ' + id + '>'
 
 class Cell(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    capacity = db.Column(db.Integer)
-    number = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    number = db.Column(db.Integer, nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), nullable=False)
     
     prison = db.relationship('Prison', backref='cells')
@@ -35,10 +35,10 @@ class Cell(db.Model):
         return '<Cell ' + number + '>'
         
 class UserAccount(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Unicode(64), index=True, unique=True)
-    is_active = db.Column(db.Boolean())
-    password_hash = db.Column(db.Text())
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    username = db.Column(db.Unicode(64), index=True, unique=True, nullable=False)
+    is_active = db.Column(db.Boolean(), nullable=False)
+    password_hash = db.Column(db.Text(), nullable=False)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))
     
     employee = db.relationship('Employee', backref=db.backref('user_account', uselist=False))
@@ -47,11 +47,11 @@ class UserAccount(db.Model):
         return '<User Account ' + id + '>'
 
 class Employee(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    security_clearance = db.Column(db.Integer)
-    position = db.Column(db.UnicodeText)
-    first_name = db.Column(db.Unicode(64))
-    last_name = db.Column(db.Unicode(64))
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    security_clearance = db.Column(db.Integer, nullable=False)
+    position = db.Column(db.UnicodeText, nullable=False)
+    first_name = db.Column(db.Unicode(64), nullable=False)
+    last_name = db.Column(db.Unicode(64), nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), nullable=False)
     
     prison = db.relationship('Prison', backref='employees')
@@ -60,8 +60,8 @@ class Employee(db.Model):
         return '<Employee ' + id + '>'
 
 class AccessCard(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    security_clearance = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    security_clearance = db.Column(db.Integer, nullable=False)
     expiry_date = db.Column(db.Date)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), nullable=False)
     
@@ -71,8 +71,8 @@ class AccessCard(db.Model):
         return '<Access Card ' + id + '>'
         
 class AccessLog(db.Model):
-    timestamp = db.Column(db.DateTime, primary_key=True)
-    access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), nullable=False, primary_key=True)
+    timestamp = db.Column(db.DateTime, primary_key=True, nullable=False)
+    access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), primary_key=True, nullable=False)
     access_card_id = db.Column(db.Integer, db.ForeignKey('access_card.id'), nullable=False)
     
     access_point = db.relationship('AccessPoint', backref='access_logs')
@@ -82,8 +82,8 @@ class AccessLog(db.Model):
         return '<Access Log ' + timestamp + '>'
         
 class AccessPoint(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    security_clearance = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    security_clearance = db.Column(db.Integer, nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), nullable=False)
     
     prison = db.relationship('Prison', backref='access_points')
@@ -92,10 +92,10 @@ class AccessPoint(db.Model):
         return '<Access Point ' + id + '>'
         
 class Schedule(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    time_open = db.Column(db.DateTime)
-    time_close = db.Column(db.DateTime)
-    access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'))
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    time_open = db.Column(db.DateTime, nullable=False)
+    time_close = db.Column(db.DateTime, nullable=False)
+    access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), nullable=False)
     
     access_point = db.relationship('AccessPoint', backref='schedules')
     
