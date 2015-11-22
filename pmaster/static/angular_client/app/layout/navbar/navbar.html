@@ -1,2 +1,23 @@
 <!-- put navbar code here -->
-test navbar
+
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <span class="navbar-brand" style="color:#fff;"><span style="font-weight:bold;">Prison Master -</span> Warden</span>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li ui-sref-active="active">
+                    <a ui-sref="managePrison">Prison</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="managePrisoners">Prisoners</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="manageEmployees">Employees</a>
+                </li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
