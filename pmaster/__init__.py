@@ -24,3 +24,6 @@ def index():
     return render_template('index.html')
 
 from pmaster.models import *
+from pmaster.api import api_blueprint
+
+app.register_blueprint(api_blueprint, url_prefix='/api')
