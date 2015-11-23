@@ -7,7 +7,7 @@ class Prison(db.Model):
     security_level = db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
-        return '<Prison ' + id + '>'
+        return '<Prison ' + str(self.id) + '>'
 
 class Prisoner(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -25,7 +25,7 @@ class Prisoner(db.Model):
     )
     
     def __repr__(self):
-        return '<Prisoner ' + id + '>'
+        return '<Prisoner ' + str(self.id) + '>'
 
 class Cell(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -40,7 +40,7 @@ class Cell(db.Model):
     )
     
     def __repr__(self):
-        return '<Cell ' + number + '>'
+        return '<Cell ' + str(self.id) + '>'
         
 class UserAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -52,7 +52,7 @@ class UserAccount(db.Model):
     employee = db.relationship('Employee', backref=db.backref('user_account', uselist=False))
     
     def __repr__(self):
-        return '<User Account ' + id + '>'
+        return '<User Account ' + str(self.id) + '>'
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -69,7 +69,7 @@ class Employee(db.Model):
     )
     
     def __repr__(self):
-        return '<Employee ' + id + '>'
+        return '<Employee ' + str(self.id) + '>'
 
 class AccessCard(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -80,7 +80,7 @@ class AccessCard(db.Model):
     employee = db.relationship('Employee', backref='access_cards')
     
     def __repr__(self):
-        return '<Access Card ' + id + '>'
+        return '<Access Card ' + str(self.id) + '>'
         
 class AccessLog(db.Model):
     __tablename__ = 'access_log'
@@ -98,7 +98,7 @@ class AccessLog(db.Model):
     )
     
     def __repr__(self):
-        return '<Access Log ' + timestamp + '>'
+        return '<Access Log ' + str(self.access_point_id) + ' ' + str(self.timestamp) + '>'
         
 class AccessPoint(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -108,7 +108,7 @@ class AccessPoint(db.Model):
     prison = db.relationship('Prison', backref='access_points')
     
     def __repr__(self):
-        return '<Access Point ' + id + '>'
+        return '<Access Point ' + str(self.id) + '>'
         
 class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -119,4 +119,4 @@ class Schedule(db.Model):
     access_point = db.relationship('AccessPoint', backref='schedules')
     
     def __repr__(self):
-        return '<Schedule ' + id + '>'
+        return '<Schedule ' + str(self.id) + '>'
