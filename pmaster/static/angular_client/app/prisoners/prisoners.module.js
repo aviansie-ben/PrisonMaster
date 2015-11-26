@@ -7,7 +7,7 @@
                     url: '/warden/manage/prisoners',
                     templateUrl: '/static/angular_client/app/prisoners/manage.html',
                     controller: 'ManagePrisonersController',
-                    controllerAs: "PrisonersCtrl"
+                    controllerAs: 'PrisonersCtrl'
                 });
         });
 })();
