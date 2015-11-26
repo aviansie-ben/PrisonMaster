@@ -145,7 +145,7 @@ class ModelEntity(Entity):
     
     @classmethod
     def create_new(cls):
-        return cls(cls.model())
+        return cls(cls.model(), True)
     
     @classmethod
     def get(cls, id):

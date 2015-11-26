@@ -23,7 +23,7 @@ from pmaster.api.prison import PrisonEntity
 from pmaster.api.prisoner import PrisonerEntity
 
 CellEntity.readable_fields = {'id': None, 'url': None, 'capacity': None, 'number': None, 'prison': PrisonEntity, 'prisoners': PrisonerEntity}
-CellEntity.writeable_fields = {'id': None, 'capacity': None, 'number': None, 'prison': PrisonEntity}
+CellEntity.writeable_fields = {'capacity': None, 'number': None, 'prison': PrisonEntity}
 CellEntity.required_fields = CellEntity.writeable_fields
 
 CellEntity.default_list_fields = ['url', 'capacity', 'prison.url', 'number']
