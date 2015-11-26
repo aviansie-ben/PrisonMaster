@@ -112,8 +112,8 @@ class AccessPoint(db.Model):
         
 class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    time_open = db.Column(db.DateTime, nullable=False)
-    time_close = db.Column(db.DateTime, nullable=False)
+    time_open = db.Column(db.Time, nullable=False)
+    time_close = db.Column(db.Time, nullable=False)
     access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), index=True, nullable=False)
     
     access_point = db.relationship('AccessPoint', backref='schedules')
