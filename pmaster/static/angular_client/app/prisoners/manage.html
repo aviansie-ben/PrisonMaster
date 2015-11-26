@@ -1,1 +1,25 @@
-PRISONERS MANAGEMENT
+<div class="col-md-1"></div>
+<div class="table-container portlet light, col-md-10">
+    <div class="portlet-title">
+        <p style="text-align:center;">This is a test title</p>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <th>Name</th>
+            <th>Cell #</th>
+            <th></th>
+            <th>Prisoner ID</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tr ng-repeat="prisoner in PrisonersCtrl.prisoners">
+            <td>{{prisoner.first_name}} {{prisoner.last_name}}</td>
+            <td>{{prisoner.cell.number}}</td>
+            <td style="width:0"><button class="btn btn-success" uib-popover="Move to" popover-trigger="mouseenter"><i class="glyphicon glyphicon-arrow-right"></i></button></td>
+            <td>{{prisoner.id}}</td>
+            <td style="width:0"><button class="btn btn-danger" uib-popover="Isolate from" popover-trigger="mouseenter"><i class="glyphicon glyphicon-ban-circle"></i></button></td>
+            <td style="width:0"><button class="btn btn-primary" uib-popover="Cellmates" popover-trigger="mouseenter"><i class="glyphicon glyphicon-user"></i></button></td>
+        </tr>
+    </table>
+</div>
+<div class="col-md-1"></div>
