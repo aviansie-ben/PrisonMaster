@@ -29,4 +29,4 @@ EmployeeEntity.required_fields = EmployeeEntity.writeable_fields
 EmployeeEntity.default_list_fields = ['url', 'first_name', 'last_name', 'position', 'prison.url']
 EmployeeEntity.default_get_fields = ['id', 'first_name', 'last_name', 'position', 'security_clearance', 'prison.name']
 
-UserAccountEntity.get_url = lambda self: api.url_for(UserAccountResource, id=self.entity.id, _external=True)
+EmployeeEntity.get_url = lambda self: api.url_for(EmployeeResource, id=self.entity.id, _external=True)
