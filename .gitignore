@@ -4,6 +4,9 @@
 # Node Modules
 node_modules/
 
+# Angular
+pmaster/static/angular_client/app/app.min.js
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
