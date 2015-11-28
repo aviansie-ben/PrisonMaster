@@ -20,8 +20,9 @@ api.add_resource(AccessPointListResource, '/access_points/')
 api.add_resource(AccessPointResource, '/access_points/<int:id>')
 
 from pmaster.api.prison import PrisonEntity
+from pmaster.api.schedule import ScheduleEntity
 
-AccessPointEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'prison': PrisonEntity}
+AccessPointEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'prison': PrisonEntity, 'schedules': ScheduleEntity}
 AccessPointEntity.writeable_fields = {'security_clearance': None, 'prison': PrisonEntity}
 AccessPointEntity.required_fields = AccessPointEntity.writeable_fields
 

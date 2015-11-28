@@ -19,10 +19,11 @@ class EmployeeResource(EntityResource):
 api.add_resource(EmployeeListResource, '/employees/')
 api.add_resource(EmployeeResource, '/employees/<int:id>')
 
+from pmaster.api.access_card import AccessCardEntity
 from pmaster.api.prison import PrisonEntity
 from pmaster.api.user_account import UserAccountEntity
 
-EmployeeEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'position': None, 'first_name': None, 'last_name': None, 'prison': PrisonEntity}
+EmployeeEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'position': None, 'first_name': None, 'last_name': None, 'prison': PrisonEntity, 'access_cards': AccessCardEntity, 'user_account': UserAccountEntity}
 EmployeeEntity.writeable_fields = {'security_clearance': None, 'position': None, 'first_name': None, 'last_name': None, 'prison': PrisonEntity}
 EmployeeEntity.required_fields = EmployeeEntity.writeable_fields
 

@@ -19,10 +19,12 @@ class PrisonResource(EntityResource):
 api.add_resource(PrisonListResource, '/prisons/')
 api.add_resource(PrisonResource, '/prisons/<int:id>')
 
+from pmaster.api.access_point import AccessPointEntity
 from pmaster.api.cell import CellEntity
+from pmaster.api.employee import EmployeeEntity
 from pmaster.api.prisoner import PrisonerEntity
 
-PrisonEntity.readable_fields = {'id': None, 'url': None, 'name': None, 'address': None, 'security_level': None, 'prisoners': PrisonerEntity, 'cells': CellEntity}
+PrisonEntity.readable_fields = {'id': None, 'url': None, 'name': None, 'address': None, 'security_level': None, 'prisoners': PrisonerEntity, 'cells': CellEntity, 'employees': EmployeeEntity, 'access_points': AccessPointEntity}
 PrisonEntity.writeable_fields = {'name': None, 'address': None, 'security_level': None}
 PrisonEntity.required_fields = PrisonEntity.writeable_fields
 
