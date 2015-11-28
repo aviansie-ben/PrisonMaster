@@ -1,6 +1,8 @@
 from pmaster.api import api
 from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
 
+from datetime import date
+
 from pmaster.models import Prisoner
 
 class PrisonerEntity(ModelEntity):
@@ -22,9 +24,9 @@ api.add_resource(PrisonerResource, '/prisoners/<int:id>')
 from pmaster.api.cell import CellEntity
 from pmaster.api.prison import PrisonEntity
 
-PrisonerEntity.readable_fields = {'id': None, 'url': None, 'first_name': None, 'last_name': None, 'release_date': None, 'prison': PrisonEntity, 'cell': CellEntity}
-PrisonerEntity.writeable_fields = {'first_name': None, 'last_name': None, 'prison': PrisonEntity, 'cell': CellEntity}
-PrisonerEntity.required_fields = PrisonerEntity.writeable_fields
+PrisonerEntity.readable_fields = {'id': None, 'url': None, 'first_name': None, 'last_name': None, 'release_date': date, 'prison': PrisonEntity, 'cell': CellEntity}
+PrisonerEntity.writeable_fields = {'first_name': None, 'last_name': None, 'release_date': date, 'prison': PrisonEntity, 'cell': CellEntity}
+PrisonerEntity.required_fields = ['first_name', 'last_name', 'prison', 'cell']
 
 PrisonerEntity.default_list_fields = ['url', 'first_name', 'last_name', 'prison.url']
 PrisonerEntity.default_get_fields = ['id', 'first_name', 'last_name', 'prison.url', 'prison.name', 'cell.url', 'cell.number']

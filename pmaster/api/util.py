@@ -1,5 +1,8 @@
 from pmaster import db
 
+from datetime import datetime, date, time
+import dateutil.parser
+
 from flask import abort, request
 from flask_restful import Resource
 
@@ -12,12 +15,12 @@ def field_validator(entity_class):
             cls = entity_class
             
             for part in field.split('.'):
-                if cls is None or part not in cls.readable_fields:
+                if cls is None or not issubclass(cls, Entity) or part not in cls.readable_fields:
                     raise ValidationError('Field ' + field + ' is unknown')
                 
                 cls = cls.readable_fields[part]
             
-            if cls is not None:
+            if cls is not None and issubclass(cls, Entity):
                 raise ValidationError('Field ' + field + ' is composite')
     
     return validate
@@ -108,8 +111,10 @@ class ModelEntity(Entity):
                 cls = self.readable_fields[field]
                 val = getattr(self.entity, field)
                 
-                if cls is None:
-                    result[field] = getattr(self.entity, field)
+                if cls is None or val is None:
+                    result[field] = val
+                elif cls is datetime or cls is date or cls is time:
+                    result[field] = val.isoformat()
                 else:
                     indirect_fields = { f.split('.', 1)[1] for f in fields if f.startswith(field + '.') }
                     
@@ -121,12 +126,18 @@ class ModelEntity(Entity):
         return result
     
     def set_field(self, name, value):
-        if self.writeable_fields[name] is not None and value is not None:
+        if self.writeable_fields[name] is not None and issubclass(self.writeable_fields[name], ModelEntity) and value is not None:
             value = self.writeable_fields[name].get(value)
             if value is None:
                 abort(422)
             
             value = value.entity
+        elif self.writeable_fields[name] is date and value is not None:
+            value = dateutil.parser.parse(value, ignoretz=True).date()
+        elif self.writeable_fields[name] is time and value is not None:
+            value = dateutil.parser.parse(value, ignoretz=True).time()
+        elif self.writeable_fields[name] is datetime and value is not None:
+            value = dateutil.parser.parse(value, ignoretz=True)
             
         setattr(self.entity, name, value)
     

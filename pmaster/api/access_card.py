@@ -1,6 +1,8 @@
 from pmaster.api import api
 from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
 
+from datetime import date
+
 from pmaster.models import AccessCard
 
 class AccessCardEntity(ModelEntity):
@@ -21,8 +23,8 @@ api.add_resource(AccessCardResource, '/access_cards/<int:id>')
 
 from pmaster.api.employee import EmployeeEntity
 
-AccessCardEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'expiry_date': None, 'employee': EmployeeEntity}
-AccessCardEntity.writeable_fields = {'security_clearance': None, 'expiry_date': None, 'employee': EmployeeEntity}
+AccessCardEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity}
+AccessCardEntity.writeable_fields = {'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity}
 AccessCardEntity.required_fields = AccessCardEntity.writeable_fields
 
 AccessCardEntity.default_list_fields = ['url', 'security_clearance', 'employee.url']
