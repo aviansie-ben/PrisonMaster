@@ -15,10 +15,16 @@ def field_validator(entity_class):
             cls = entity_class
             
             for part in field.split('.'):
-                if cls is None or not issubclass(cls, Entity) or part not in cls.readable_fields:
+                if cls is None or not issubclass(cls, Entity):
                     raise ValidationError('Field ' + field + ' is unknown')
                 
-                cls = cls.readable_fields[part]
+                if part == '*':
+                    cls = None
+                else:
+                    if part not in cls.readable_fields:
+                        raise ValidationError('Field ' + field + ' is unknown')
+                    
+                    cls = cls.readable_fields[part]
             
             if cls is not None and issubclass(cls, Entity):
                 raise ValidationError('Field ' + field + ' is composite')
@@ -100,28 +106,34 @@ class ModelEntity(Entity):
     def get_url(self):
         return None
     
+    def field_to_json(self, field, sub_fields=None):
+        if field == 'url':
+            return self.get_url()
+        
+        cls = self.readable_fields[field]
+        val = getattr(self.entity, field)
+        
+        if cls is None or val is None:
+            return val
+        elif cls is datetime or cls is date or cls is time:
+            return val.isoformat()
+        else:
+            if isinstance(val, list):
+                return [ cls(lv).to_json(sub_fields) if lv is not None else None for lv in val ]
+            else:
+                return cls(val).to_json(sub_fields) if val is not None else None
+    
     def to_json(self, fields):
         result = {}
         direct_fields = { f.split('.', 1)[0] for f in fields }
         
         for field in direct_fields:
-            if field == 'url':
-                result['url'] = self.get_url()
+            if field == '*':
+                for n, t in self.readable_fields.items():
+                    if t is None or not issubclass(t, Entity):
+                        result[n] = self.field_to_json(n)
             else:
-                cls = self.readable_fields[field]
-                val = getattr(self.entity, field)
-                
-                if cls is None or val is None:
-                    result[field] = val
-                elif cls is datetime or cls is date or cls is time:
-                    result[field] = val.isoformat()
-                else:
-                    indirect_fields = { f.split('.', 1)[1] for f in fields if f.startswith(field + '.') }
-                    
-                    if isinstance(val, list):
-                        result[field] = [ cls(lv).to_json(indirect_fields) if lv is not None else None for lv in val ]
-                    else:
-                        result[field] = cls(val).to_json(indirect_fields) if val is not None else None
+                result[field] = self.field_to_json(field, { f.split('.', 1)[1] for f in fields if f.startswith(field + '.') })
         
         return result
     
