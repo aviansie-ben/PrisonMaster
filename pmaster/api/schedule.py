@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from datetime import time
 
@@ -23,9 +23,13 @@ api.add_resource(ScheduleResource, '/schedules/<int:id>')
 
 from pmaster.api.access_point import AccessPointEntity
 
-ScheduleEntity.readable_fields = {'id': None, 'url': None, 'time_open': time, 'time_close': time, 'access_point': AccessPointEntity}
-ScheduleEntity.writeable_fields = {'time_open': time, 'time_close': time, 'access_point': AccessPointEntity}
-ScheduleEntity.required_fields = ScheduleEntity.writeable_fields
+ScheduleEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'time_open': EntityField(time),
+    'time_close': EntityField(time),
+    'access_point': EntityField(AccessPointEntity),
+}
 
 ScheduleEntity.default_list_fields = ['url', 'time_open', 'time_close', 'access_point.url']
 ScheduleEntity.default_get_fields = ['id', 'time_open', 'time_close', 'access_point.url', 'access_point.id', 'access_point.prison.name']

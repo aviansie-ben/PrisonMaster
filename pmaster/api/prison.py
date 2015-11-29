@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from pmaster.models import Prison
 
@@ -24,9 +24,17 @@ from pmaster.api.cell import CellEntity
 from pmaster.api.employee import EmployeeEntity
 from pmaster.api.prisoner import PrisonerEntity
 
-PrisonEntity.readable_fields = {'id': None, 'url': None, 'name': None, 'address': None, 'security_level': None, 'prisoners': PrisonerEntity, 'cells': CellEntity, 'employees': EmployeeEntity, 'access_points': AccessPointEntity}
-PrisonEntity.writeable_fields = {'name': None, 'address': None, 'security_level': None}
-PrisonEntity.required_fields = PrisonEntity.writeable_fields
+PrisonEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'name': EntityField(str),
+    'address': EntityField(str),
+    'security_level': EntityField(int),
+    'prisoners': EntityListField(PrisonerEntity),
+    'cells': EntityListField(CellEntity),
+    'employees': EntityListField(EmployeeEntity),
+    'access_points': EntityListField(AccessPointEntity),
+}
 
 PrisonEntity.default_list_fields = ['url', 'name', 'security_level']
 PrisonEntity.default_get_fields = ['id', 'name', 'address', 'security_level', 'prisoners.url', 'cells.url', 'cells.number']

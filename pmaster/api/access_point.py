@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from datetime import datetime
 
@@ -28,13 +28,22 @@ from pmaster.api.access_card import AccessCardEntity
 from pmaster.api.prison import PrisonEntity
 from pmaster.api.schedule import ScheduleEntity
 
-AccessPointEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'prison': PrisonEntity, 'schedules': ScheduleEntity, 'access_logs': AccessLogEntity}
-AccessPointEntity.writeable_fields = {'security_clearance': None, 'prison': PrisonEntity}
-AccessPointEntity.required_fields = AccessPointEntity.writeable_fields
+AccessPointEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'security_clearance': EntityField(int),
+    'prison': EntityField(PrisonEntity),
+    'schedules': EntityListField(ScheduleEntity),
+    'access_logs': EntityListField(AccessLogEntity),
+}
 
 AccessPointEntity.default_list_fields = ['url', 'security_clearance', 'prison.url']
 AccessPointEntity.default_get_fields = ['id', 'security_clearance', 'prison.url', 'prison.name']
 
 AccessPointEntity.get_url = lambda self: api.url_for(AccessPointResource, id=self.entity.id, _external=True)
 
-AccessLogEntity.readable_fields = {'timestamp': datetime, 'access_point': AccessPointEntity, 'access_card': AccessCardEntity}
+AccessLogEntity.fields = {
+    'timestamp': EntityField(datetime, settable=False),
+    'access_point': EntityField(AccessPointEntity, settable=False),
+    'access_card': EntityField(AccessCardEntity, settable=False),
+}

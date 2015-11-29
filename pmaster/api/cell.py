@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from pmaster.models import Cell
 
@@ -22,9 +22,14 @@ api.add_resource(CellResource, '/cells/<int:id>')
 from pmaster.api.prison import PrisonEntity
 from pmaster.api.prisoner import PrisonerEntity
 
-CellEntity.readable_fields = {'id': None, 'url': None, 'capacity': None, 'number': None, 'prison': PrisonEntity, 'prisoners': PrisonerEntity}
-CellEntity.writeable_fields = {'capacity': None, 'number': None, 'prison': PrisonEntity}
-CellEntity.required_fields = CellEntity.writeable_fields
+CellEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'capacity': EntityField(int),
+    'number': EntityField(int),
+    'prison': EntityField(PrisonEntity),
+    'prisoners': EntityListField(PrisonerEntity),
+}
 
 CellEntity.default_list_fields = ['url', 'capacity', 'prison.url', 'number']
 CellEntity.default_get_fields = ['id', 'capacity', 'prison.url', 'number', 'prisoners.url']

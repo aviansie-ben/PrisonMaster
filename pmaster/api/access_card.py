@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from datetime import date
 
@@ -24,9 +24,14 @@ api.add_resource(AccessCardResource, '/access_cards/<int:id>')
 from pmaster.api.access_point import AccessLogEntity
 from pmaster.api.employee import EmployeeEntity
 
-AccessCardEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity, 'access_logs': AccessLogEntity}
-AccessCardEntity.writeable_fields = {'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity}
-AccessCardEntity.required_fields = AccessCardEntity.writeable_fields
+AccessCardEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'security_clearance': EntityField(int),
+    'expiry_date': EntityField(date, required=False),
+    'employee': EntityField(EmployeeEntity),
+    'access_logs': EntityListField(AccessLogEntity),
+}
 
 AccessCardEntity.default_list_fields = ['url', 'security_clearance', 'employee.url']
 AccessCardEntity.default_get_fields = ['id', 'security_clearance', 'expiry_date', 'employee.url', 'employee.last_name', 'employee.first_name']

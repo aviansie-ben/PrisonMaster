@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from pmaster.models import Employee
 
@@ -23,9 +23,17 @@ from pmaster.api.access_card import AccessCardEntity
 from pmaster.api.prison import PrisonEntity
 from pmaster.api.user_account import UserAccountEntity
 
-EmployeeEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'position': None, 'first_name': None, 'last_name': None, 'prison': PrisonEntity, 'access_cards': AccessCardEntity, 'user_account': UserAccountEntity}
-EmployeeEntity.writeable_fields = {'security_clearance': None, 'position': None, 'first_name': None, 'last_name': None, 'prison': PrisonEntity}
-EmployeeEntity.required_fields = EmployeeEntity.writeable_fields
+EmployeeEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'security_clearance': EntityField(int),
+    'position': EntityField(str),
+    'first_name': EntityField(str),
+    'last_name': EntityField(str),
+    'prison': EntityField(PrisonEntity),
+    'access_cards': EntityListField(AccessCardEntity),
+    'user_account': EntityField(UserAccountEntity, settable=False),
+}
 
 EmployeeEntity.default_list_fields = ['url', 'first_name', 'last_name', 'position', 'prison.url']
 EmployeeEntity.default_get_fields = ['id', 'first_name', 'last_name', 'position', 'security_clearance', 'prison.name']

@@ -1,5 +1,5 @@
 from pmaster.api import api
-from pmaster.api.util import ModelEntity, EntityListField, EntityListResource, EntityResource
+from pmaster.api.util import ModelEntity, EntityField, EntityListField, EntityListResource, EntityResource
 
 from datetime import date
 
@@ -24,16 +24,18 @@ api.add_resource(PrisonerResource, '/prisoners/<int:id>')
 from pmaster.api.cell import CellEntity
 from pmaster.api.prison import PrisonEntity
 
-PrisonerEntity.readable_fields = {'id': None, 'url': None, 'first_name': None, 'last_name': None, 'release_date': date, 'prison': PrisonEntity, 'cell': CellEntity, 'isolated_prisoners': PrisonerEntity}
-PrisonerEntity.writeable_fields = {
-    'first_name': None,
-    'last_name': None,
-    'release_date': date,
-    'prison': PrisonEntity,
-    'cell': CellEntity,
-    'isolated_prisoners': EntityListField(PrisonerEntity, adder=lambda entity, element: entity.entity.add_isolated_prisoner(element.entity), remover=lambda entity, element: entity.entity.remove_isolated_prisoner(element.entity))
+PrisonerEntity.fields = {
+    'id': EntityField(int, settable=False),
+    'url': EntityField(str, settable=False),
+    'first_name': EntityField(str),
+    'last_name': EntityField(str),
+    'release_date': EntityField(date, required=False),
+    'prison': EntityField(PrisonEntity),
+    'cell': EntityField(CellEntity),
+    'isolated_prisoners': EntityListField(PrisonerEntity,
+        adder=lambda entity, element: entity.entity.add_isolated_prisoner(element.entity),
+        remover=lambda entity, element: entity.entity.remove_isolated_prisoner(element.entity)),
 }
-PrisonerEntity.required_fields = ['first_name', 'last_name', 'prison', 'cell']
 
 PrisonerEntity.default_list_fields = ['url', 'first_name', 'last_name', 'prison.url']
 PrisonerEntity.default_get_fields = ['id', 'first_name', 'last_name', 'prison.url', 'prison.name', 'cell.url', 'cell.number']
