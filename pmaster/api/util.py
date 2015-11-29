@@ -21,21 +21,101 @@ def field_validator(entity_class):
                 if part == '*':
                     cls = None
                 else:
-                    if part not in cls.readable_fields:
+                    if part not in cls.fields or cls.fields[part].writeonly:
                         raise ValidationError('Field ' + field + ' is unknown')
                     
-                    cls = cls.readable_fields[part]
+                    cls = cls.fields[part].type
             
             if cls is not None and issubclass(cls, Entity):
                 raise ValidationError('Field ' + field + ' is composite')
     
     return validate
 
-class EntityListField(object):
+class EntityField(object):
+    def __init__(self, type, settable=True, required=True, writeonly=False):
+        self.type = type
+        self.settable = settable
+        self.required = required
+        self.writeonly = writeonly
+    
+    def from_json(self, value):
+        if value is None:
+            if self.required:
+                raise ValueError('Cannot put null into required field')
+            
+            return None
+        else:
+            if self.type is datetime:
+                value = dateutil.parser.parse(value, ignoretz=True)
+            elif self.type is date:
+                value = dateutil.parser.parse(value, ignoretz=True).date()
+            elif self.type is time:
+                value = dateutil.parser.parse(value, ignoretz=True).time()
+            elif issubclass(self.type, Entity):
+                value = self.type.get(value)
+                if value is None:
+                    raise ValueError('Cannot find entity for relationship')
+            
+            if not isinstance(value, self.type):
+                raise ValueError('Incorrect type for field')
+            
+            return value
+    
+    def to_json(self, value, sub_fields={}):
+        if value is None:
+            return None
+        elif self.type is datetime or self.type is date or self.type is time:
+            return value.isoformat()
+        elif issubclass(self.type, Entity):
+            return value.to_json(sub_fields)
+        else:
+            return value
+    
+    def describe(self):
+        description = {
+            'type': self.type_name,
+            'ops': self.supported_ops,
+            'readable': not self.writeonly,
+        }
+        
+        if self.settable:
+            description['required'] = self.required
+        
+        return description
+    
+    @property
+    def supported_ops(self):
+        if self.settable:
+            return ['set']
+        else:
+            return []
+    
+    @property
+    def type_name(self):
+        return self.type.__name__
+
+class EntityListField(EntityField):
     def __init__(self, entity_type, adder=None, remover=None):
-        self.entity_type = entity_type
+        EntityField.__init__(self, entity_type, False, False)
+        
         self.adder = adder
         self.remover = remover
+    
+    @property
+    def supported_ops(self):
+        ops = EntityField.supported_ops.fget(self)
+        
+        if self.adder is not None:
+            ops.append('add')
+            
+        if self.remover is not None:
+            ops.append('remove')
+        
+        return ops
+    
+    @property
+    def type_name(self):
+        return '[' + self.type.__name__ + ']'
 
 class Entity(object):
     readable_fields = {}
@@ -106,7 +186,7 @@ class Entity(object):
     
     @classmethod
     def describe(cls):
-        return {'fields': { f: None if not t else t.__name__ for f, t in cls.readable_fields.items() }}
+        return {'fields': { f: t.describe() for f, t in cls.fields.items() }}
 
 class ModelEntity(Entity):
     model = None
@@ -122,18 +202,19 @@ class ModelEntity(Entity):
         if field == 'url':
             return self.get_url()
         
-        cls = self.readable_fields[field]
+        f = self.fields[field]
         val = getattr(self.entity, field)
         
-        if cls is None or val is None:
-            return val
-        elif cls is datetime or cls is date or cls is time:
-            return val.isoformat()
-        else:
+        if issubclass(f.type, ModelEntity):
             if isinstance(val, list):
-                return [ cls(lv).to_json(sub_fields) if lv is not None else None for lv in val ]
+                val = [ f.type(lv) for lv in val ]
             else:
-                return cls(val).to_json(sub_fields) if val is not None else None
+                val = f.type(val)
+        
+        if isinstance(val, list):
+            return [ f.to_json(lv, sub_fields) for lv in val ]
+        else:
+            return f.to_json(val, sub_fields)
     
     def to_json(self, fields):
         result = {}
@@ -141,8 +222,8 @@ class ModelEntity(Entity):
         
         for field in direct_fields:
             if field == '*':
-                for n, t in self.readable_fields.items():
-                    if t is None or not issubclass(t, Entity):
+                for n, f in self.fields.items():
+                    if not f.writeonly and not issubclass(f.type, Entity):
                         result[n] = self.field_to_json(n)
             else:
                 result[field] = self.field_to_json(field, { f.split('.', 1)[1] for f in fields if f.startswith(field + '.') })
@@ -150,46 +231,25 @@ class ModelEntity(Entity):
         return result
     
     def set_field(self, name, value):
-        if self.writeable_fields[name] is not None and issubclass(self.writeable_fields[name], ModelEntity) and value is not None:
-            value = self.writeable_fields[name].get(value)
-            if value is None:
-                abort(422)
-            
+        value = self.fields[name].from_json(value)
+        if isinstance(value, ModelEntity):
             value = value.entity
-        elif self.writeable_fields[name] is date and value is not None:
-            value = dateutil.parser.parse(value, ignoretz=True).date()
-        elif self.writeable_fields[name] is time and value is not None:
-            value = dateutil.parser.parse(value, ignoretz=True).time()
-        elif self.writeable_fields[name] is datetime and value is not None:
-            value = dateutil.parser.parse(value, ignoretz=True)
             
         setattr(self.entity, name, value)
     
     def add_to_field(self, name, value):
-        if self.writeable_fields[name] is not None and isinstance(self.writeable_fields[name], EntityListField):
-            if self.writeable_fields[name].adder is None:
-                abort(422)
-            
-            value = self.writeable_fields[name].entity_type.get(value)
-            if value is None:
-                abort(422)
-            
-            self.writeable_fields[name].adder(self, value)
-        else:
+        value = self.fields[name].type.get(value)
+        if value is None:
             abort(422)
+        
+        self.fields[name].adder(self, value)
     
     def remove_from_field(self, name, value):
-        if self.writeable_fields[name] is not None and isinstance(self.writeable_fields[name], EntityListField):
-            if self.writeable_fields[name].remover is None:
-                abort(422)
-            
-            value = self.writeable_fields[name].entity_type.get(value)
-            if value is None:
-                abort(422)
-            
-            self.writeable_fields[name].remover(self, value)
-        else:
+        value = self.writeable_fields[name].type.get(value)
+        if value is None:
             abort(422)
+        
+        self.writeable_fields[name].remover(self, value)
     
     def delete(self):
         db.session.delete(self.entity)
@@ -240,9 +300,9 @@ class EntityListResource(Resource):
         if json is None:
             abort(415)
         
-        if any( k not in self.entity_class.writeable_fields for k in json.keys() ):
+        if any( not self.entity_class.fields[k].settable for k in json.keys() ):
             abort(422)
-        elif any( k not in json or json[k] is None for k in self.entity_class.required_fields ):
+        elif any( f.required and n not in json for n, f in self.entity_class.fields.items() ):
             abort(422)
         elif any( not self.entity_class.allow_create_with_field(k) for k in json.keys() ):
             abort(403)
@@ -258,40 +318,6 @@ class EntityListResource(Resource):
     
     def options(self):
         if self.entity_class is None:
-            return {}
-        else:
-            return self.entity_class.describe()
-
-class EntitySubListResource(Resource):
-    outer_entity_class = None
-    inner_entity_class = None
-    
-    def get_sub_list(self, outer):
-        raise NotImplementedError()
-    
-    def get(self, id):
-        if self.outer_entity_class is None or not self.outer_entity_class.supports_list:
-            abort(405)
-        elif self.inner_entity_class is None:
-            abort(405)
-        
-        outer = self.outer_entity_class.get(id)
-            
-        if outer is None:
-            abort(404)
-        elif not outer.allow_read:
-            abort(403)
-        
-        @use_args({'fields': fields.String(validate=field_validator(self.inner_entity_class))})
-        def get(self, args):
-            fields = args['fields'].split(',') if 'fields' in args else self.inner_entity_class.default_list_fields
-            
-            return { 'data': [ e.to_json(fields) for e in self.get_sub_list(outer) if e.allow_read ] }
-        
-        return get(self)
-    
-    def options(self, id):
-        if self.inner_entity_class is None:
             return {}
         else:
             return self.entity_class.describe()
@@ -353,16 +379,26 @@ class EntityResource(Resource):
             n = op_dict['field']
             v = op_dict['value']
             
-            if n not in self.entity_class.writeable_fields:
+            if n not in self.entity_class.fields:
                 abort(422)
             elif not result.allow_update_field(n):
                 abort(403)
             
+            f = self.entity_class.fields[n]
             if o == 'set':
+                if not f.settable:
+                    abort(422)
+                
                 result.set_field(n, v)
             elif o == 'add':
+                if not isinstance(f, EntityListField) or f.adder is None:
+                    abort(422)
+                
                 result.add_to_field(n, v)
             elif o == 'remove':
+                if not isinstance(f, EntityListField) or f.remover is None:
+                    abort(422)
+                
                 result.remove_from_field(n, v)
             else:
                 abort(422)
