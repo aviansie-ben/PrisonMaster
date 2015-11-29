@@ -21,9 +21,10 @@ class AccessCardResource(EntityResource):
 api.add_resource(AccessCardListResource, '/access_cards/')
 api.add_resource(AccessCardResource, '/access_cards/<int:id>')
 
+from pmaster.api.access_point import AccessLogEntity
 from pmaster.api.employee import EmployeeEntity
 
-AccessCardEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity}
+AccessCardEntity.readable_fields = {'id': None, 'url': None, 'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity, 'access_logs': AccessLogEntity}
 AccessCardEntity.writeable_fields = {'security_clearance': None, 'expiry_date': date, 'employee': EmployeeEntity}
 AccessCardEntity.required_fields = AccessCardEntity.writeable_fields
 
