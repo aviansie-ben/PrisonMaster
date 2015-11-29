@@ -29,7 +29,13 @@ class Prisoner(db.Model):
         return [ r.high_prisoner for r in self.low_isolated_prisoners ] + [ r.low_prisoner for r in self.high_isolated_prisoners ]
     
     def add_isolated_prisoner(self, other_prisoner):
-        db.session.add(PrisonerIsolation(self.id, other_prisoner.id))
+        if self.id < other_prisoner.id:
+            isolation = next(( r for r in self.low_isolated_prisoners if r.high_prisoner_id == other_prisoner.id ), None)
+        else:
+            isolation = next(( r for r in self.high_isolated_prisoners if r.low_prisoner_id == other_prisoner.id ), None)
+        
+        if isolation is None:
+            db.session.add(PrisonerIsolation(self.id, other_prisoner.id))
     
     def remove_isolated_prisoner(self, other_prisoner):
         if self.id < other_prisoner.id:
