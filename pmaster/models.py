@@ -24,8 +24,54 @@ class Prisoner(db.Model):
         db.Index('ix_prisoner_name', 'last_name', 'first_name'),
     )
     
+    @property
+    def isolated_prisoners(self):
+        return [ r.high_prisoner for r in self.low_isolated_prisoners ] + [ r.low_prisoner for r in self.high_isolated_prisoners ]
+    
+    def add_isolated_prisoner(self, other_prisoner):
+        if self.id < other_prisoner.id:
+            isolation = next(( r for r in self.low_isolated_prisoners if r.high_prisoner_id == other_prisoner.id ), None)
+        else:
+            isolation = next(( r for r in self.high_isolated_prisoners if r.low_prisoner_id == other_prisoner.id ), None)
+        
+        if isolation is None:
+            db.session.add(PrisonerIsolation(self.id, other_prisoner.id))
+    
+    def remove_isolated_prisoner(self, other_prisoner):
+        if self.id < other_prisoner.id:
+            isolation = next(( r for r in self.low_isolated_prisoners if r.high_prisoner_id == other_prisoner.id ), None)
+        else:
+            isolation = next(( r for r in self.high_isolated_prisoners if r.low_prisoner_id == other_prisoner.id ), None)
+        
+        if isolation is not None:
+            db.session.delete(isolation)
+    
     def __repr__(self):
         return '<Prisoner ' + str(self.id) + '>'
+
+class PrisonerIsolation(db.Model):
+    __tablename__ = 'prisoner_isolation'
+    
+    def __init__(self, p1_id, p2_id):
+        if p1_id < p2_id:
+            self.low_prisoner_id = p1_id
+            self.high_prisoner_id = p2_id
+        else:
+            self.low_prisoner_id = p1_id
+            self.high_prisoner_id = p2_id
+    
+    low_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
+    high_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
+    
+    low_prisoner = db.relationship('Prisoner', foreign_keys=[low_prisoner_id], backref='low_isolated_prisoners')
+    high_prisoner = db.relationship('Prisoner', foreign_keys=[high_prisoner_id], backref='high_isolated_prisoners')
+    
+    __table_args__ = (
+        db.PrimaryKeyConstraint('low_prisoner_id', 'high_prisoner_id'),
+    )
+    
+    def __repr__(self):
+        return '<PrisonerIsolation ' + str(self.low_prisoner_id) + ' ' + str(self.high_prisoner_id) + '>'
 
 class Cell(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
