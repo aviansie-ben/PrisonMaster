@@ -7,7 +7,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 app = Flask(__name__)
 app.config.from_object('config')
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={'autoflush': False})
 migrate = Migrate(app, db)
 
 manager = Manager(app)
@@ -24,3 +24,6 @@ def index():
     return render_template('index.html')
 
 from pmaster.models import *
+from pmaster.api import api_blueprint
+
+app.register_blueprint(api_blueprint, url_prefix='/api')
