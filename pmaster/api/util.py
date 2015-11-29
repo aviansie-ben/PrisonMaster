@@ -31,6 +31,12 @@ def field_validator(entity_class):
     
     return validate
 
+class EntityListField(object):
+    def __init__(self, entity_type, adder=None, remover=None):
+        self.entity_type = entity_type
+        self.adder = adder
+        self.remover = remover
+
 class Entity(object):
     readable_fields = {}
     writeable_fields = {}
@@ -64,6 +70,12 @@ class Entity(object):
         return {}
     
     def set_field(self, name, value):
+        raise NotImplementedError()
+    
+    def add_to_field(self, name, value):
+        raise NotImplementedError()
+    
+    def remove_from_field(self, name, value):
         raise NotImplementedError()
     
     def delete(self):
@@ -152,6 +164,32 @@ class ModelEntity(Entity):
             value = dateutil.parser.parse(value, ignoretz=True)
             
         setattr(self.entity, name, value)
+    
+    def add_to_field(self, name, value):
+        if self.writeable_fields[name] is not None and isinstance(self.writeable_fields[name], EntityListField):
+            if self.writeable_fields[name].adder is None:
+                abort(422)
+            
+            value = self.writeable_fields[name].entity_type.get(value)
+            if value is None:
+                abort(422)
+            
+            self.writeable_fields[name].adder(self, value)
+        else:
+            abort(422)
+    
+    def remove_from_field(self, name, value):
+        if self.writeable_fields[name] is not None and isinstance(self.writeable_fields[name], EntityListField):
+            if self.writeable_fields[name].remover is None:
+                abort(422)
+            
+            value = self.writeable_fields[name].entity_type.get(value)
+            if value is None:
+                abort(422)
+            
+            self.writeable_fields[name].remover(self, value)
+        else:
+            abort(422)
     
     def delete(self):
         db.session.delete(self.entity)
@@ -322,6 +360,10 @@ class EntityResource(Resource):
             
             if o == 'set':
                 result.set_field(n, v)
+            elif o == 'add':
+                result.add_to_field(n, v)
+            elif o == 'remove':
+                result.remove_from_field(n, v)
             else:
                 abort(422)
         
