@@ -48,11 +48,11 @@ class PrisonerIsolation(db.Model):
     
     def __init__(self, p1_id, p2_id):
         if p1_id < p2_id:
-            low_prisoner_id = p1_id
-            high_prisoner_id = p2_id
+            self.low_prisoner_id = p1_id
+            self.high_prisoner_id = p2_id
         else:
-            low_prisoner_id = p1_id
-            high_prisoner_id = p2_id
+            self.low_prisoner_id = p1_id
+            self.high_prisoner_id = p2_id
     
     low_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
     high_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
@@ -63,6 +63,9 @@ class PrisonerIsolation(db.Model):
     __table_args__ = (
         db.PrimaryKeyConstraint('low_prisoner_id', 'high_prisoner_id'),
     )
+    
+    def __repr__(self):
+        return '<PrisonerIsolation ' + str(self.low_prisoner_id) + ' ' + str(self.high_prisoner_id) + '>'
 
 class Cell(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
