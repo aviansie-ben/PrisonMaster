@@ -21,8 +21,8 @@ api.add_resource(UserAccountResource, '/user_accounts/<int:id>')
 
 from pmaster.api.employee import EmployeeEntity
 
-UserAccountEntity.readable_fields = {'id': None, 'url': None, 'username': None, 'is_active': None, 'password_hash': None, 'employee': EmployeeEntity}
-UserAccountEntity.writeable_fields = {'username': None, 'is_active': None, 'password_hash': None, 'employee': EmployeeEntity}
+UserAccountEntity.readable_fields = {'id': None, 'url': None, 'username': None, 'is_active': None, 'employee': EmployeeEntity}
+UserAccountEntity.writeable_fields = {'username': None, 'is_active': None, 'employee': EmployeeEntity}
 UserAccountEntity.required_fields = UserAccountEntity.writeable_fields
 
 UserAccountEntity.default_list_fields = ['url', 'username', 'is_active', 'employee.url']
