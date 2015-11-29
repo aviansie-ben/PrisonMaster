@@ -35,7 +35,7 @@ class EntityField(object):
     def __init__(self, type, settable=True, required=True, writeonly=False):
         self.type = type
         self.settable = settable
-        self.required = required
+        self.required = required and settable
         self.writeonly = writeonly
     
     def from_json(self, value):
