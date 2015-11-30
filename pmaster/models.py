@@ -17,7 +17,7 @@ class Prisoner(db.Model):
     last_name = db.Column(db.Unicode(64), nullable=False)
     release_date = db.Column(db.Date)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), index=True, nullable=False)
-    cell_id = db.Column(db.Integer, db.ForeignKey('cell.id'), index=True, nullable=False)
+    cell_id = db.Column(db.Integer, db.ForeignKey('cell.id'), index=True)
     
     prison = db.relationship('Prison', backref='prisoners')
     cell = db.relationship('Cell', backref='prisoners')
