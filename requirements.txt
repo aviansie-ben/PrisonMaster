@@ -1,5 +1,9 @@
 flask>=0.10
+flask-sqlalchemy>=2.1
+flask-migrate>=1.6
 flask-socketio==1.0b1
+flask-restful>=0.3.4
 eventlet>=0.17.4
 flask-wtf>=0.12
 webargs>=0.18
+python-dateutil>=2.4.2

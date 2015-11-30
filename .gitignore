@@ -1,5 +1,7 @@
 # Configuration
 /config.py
+/app.db
+/migrations
 
 # Node Modules
 node_modules/
