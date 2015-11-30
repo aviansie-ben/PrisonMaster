@@ -161,6 +161,7 @@ class AccessLog(db.Model):
         
 class AccessPoint(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+    label = db.Column(db.Unicode(64))
     security_clearance = db.Column(db.Integer, nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), index=True, nullable=False)
     

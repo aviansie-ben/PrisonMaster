@@ -31,14 +31,15 @@ from pmaster.api.schedule import ScheduleEntity
 AccessPointEntity.fields = {
     'id': EntityField(int, settable=False),
     'url': EntityField(str, settable=False),
+    'label': EntityField(str, required=False),
     'security_clearance': EntityField(int),
     'prison': EntityField(PrisonEntity),
     'schedules': EntityListField(ScheduleEntity),
     'access_logs': EntityListField(AccessLogEntity),
 }
 
-AccessPointEntity.default_list_fields = ['url', 'security_clearance', 'prison.url']
-AccessPointEntity.default_get_fields = ['id', 'security_clearance', 'prison.url', 'prison.name']
+AccessPointEntity.default_list_fields = ['url', 'label', 'security_clearance', 'prison.url']
+AccessPointEntity.default_get_fields = ['id', 'label', 'security_clearance', 'prison.url', 'prison.name']
 
 AccessPointEntity.get_url = lambda self: api.url_for(AccessPointResource, id=self.entity.id, _external=True)
 
