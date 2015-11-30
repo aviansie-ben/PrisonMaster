@@ -5,7 +5,7 @@
             $stateProvider
                 .state('managePrison', {
                     url: '/warden/manage/prison',
-                    templateUrl: '/static/angular_client/app/prison/manage.html'
+                    templateUrl: '/static/angular_client/app/prison/managePrison.html'
                 });
         });
 })();

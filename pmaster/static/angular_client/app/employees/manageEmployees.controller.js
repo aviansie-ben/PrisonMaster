@@ -1,10 +1,12 @@
 (function() {
     'use strict';
     angular.module('prisonMaster.employees').controller('ManageEmployeesController', manageEmployees);
-    
-    function manageEmployees() {
+
+    function manageEmployees($uibModal) {
         var ctrl = this;
-        
+
+        ctrl.aCardModal = openACardModal;
+
         ctrl.employees = [
             {
                 first_name: "John",
@@ -37,5 +39,14 @@
                 security_clearance: 5
             }
         ];
+
+        function openACardModal() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/employees/accessCardModal.html',
+                controller: 'AccessCardModalController',
+                controllerAs: "ACardModalCtrl"
+            });
+        }
     }
 })();

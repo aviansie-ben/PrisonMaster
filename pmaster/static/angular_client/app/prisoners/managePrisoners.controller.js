@@ -2,8 +2,12 @@
     'use strict';
     angular.module('prisonMaster.prisoners').controller('ManagePrisonersController', managePrisoners);
 
-    function managePrisoners() {
+    function managePrisoners($uibModal) {
         var ctrl = this;
+
+        ctrl.isolateModal = openIsolate;
+        ctrl.cellmatesModal = openCellmates;
+        ctrl.moveModal = openMove;
 
         ctrl.prisoners = [
             {
@@ -47,6 +51,33 @@
                 id: 124131
             }
         ];
+
+        function openIsolate() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/prisoners/isolateModal.html',
+                controller: 'IsolateModalController',
+                controllerAs: 'IsoModalCtrl'
+            });
+        }
+
+        function openCellmates() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/prisoners/cellmatesModal.html',
+                controller: 'CellmatesModalController',
+                controllerAs: 'CmModalCtrl'
+            });
+        }
+
+        function openMove() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/prisoners/movePrisonerModal.html',
+                controller: 'MovePrisonerModalController',
+                controllerAs: "MvModalCtrl"
+            });
+        }
 
     }
 })();
