@@ -59,8 +59,8 @@ class PrisonerIsolation(db.Model):
             self.low_prisoner_id = p1_id
             self.high_prisoner_id = p2_id
         else:
-            self.low_prisoner_id = p1_id
-            self.high_prisoner_id = p2_id
+            self.low_prisoner_id = p2_id
+            self.high_prisoner_id = p1_id
     
     low_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
     high_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
