@@ -118,9 +118,7 @@ class EntityListField(EntityField):
         return '[' + self.type.__name__ + ']'
 
 class Entity(object):
-    readable_fields = {}
-    writeable_fields = {}
-    required_fields = []
+    fields = {}
     
     default_list_fields = []
     default_get_fields = []
@@ -245,11 +243,11 @@ class ModelEntity(Entity):
         self.fields[name].adder(self, value)
     
     def remove_from_field(self, name, value):
-        value = self.writeable_fields[name].type.get(value)
+        value = self.fields[name].type.get(value)
         if value is None:
             abort(422)
         
-        self.writeable_fields[name].remover(self, value)
+        self.fields[name].remover(self, value)
     
     def delete(self):
         db.session.delete(self.entity)
