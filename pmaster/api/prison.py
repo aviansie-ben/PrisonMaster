@@ -17,7 +17,7 @@ class PrisonResource(EntityResource):
     entity_class = PrisonEntity
 
 api.add_resource(PrisonListResource, '/prisons/')
-api.add_resource(PrisonResource, '/prisons/<int:id>')
+api.add_resource(PrisonResource, '/prisons/<int:id>/')
 
 from pmaster.api.access_point import AccessPointEntity
 from pmaster.api.cell import CellEntity

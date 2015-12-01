@@ -22,7 +22,7 @@ class AccessPointResource(EntityResource):
     entity_class = AccessPointEntity
 
 api.add_resource(AccessPointListResource, '/access_points/')
-api.add_resource(AccessPointResource, '/access_points/<int:id>')
+api.add_resource(AccessPointResource, '/access_points/<int:id>/')
 
 from pmaster.api.access_card import AccessCardEntity
 from pmaster.api.prison import PrisonEntity

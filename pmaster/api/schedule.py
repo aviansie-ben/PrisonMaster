@@ -19,7 +19,7 @@ class ScheduleResource(EntityResource):
     entity_class = ScheduleEntity
 
 api.add_resource(ScheduleListResource, '/schedules/')
-api.add_resource(ScheduleResource, '/schedules/<int:id>')
+api.add_resource(ScheduleResource, '/schedules/<int:id>/')
 
 from pmaster.api.access_point import AccessPointEntity
 

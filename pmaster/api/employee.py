@@ -17,7 +17,7 @@ class EmployeeResource(EntityResource):
     entity_class = EmployeeEntity
 
 api.add_resource(EmployeeListResource, '/employees/')
-api.add_resource(EmployeeResource, '/employees/<int:id>')
+api.add_resource(EmployeeResource, '/employees/<int:id>/')
 
 from pmaster.api.access_card import AccessCardEntity
 from pmaster.api.prison import PrisonEntity

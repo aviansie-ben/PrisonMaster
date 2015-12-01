@@ -17,7 +17,7 @@ class UserAccountResource(EntityResource):
     entity_class = UserAccountEntity
 
 api.add_resource(UserAccountListResource, '/user_accounts/')
-api.add_resource(UserAccountResource, '/user_accounts/<int:id>')
+api.add_resource(UserAccountResource, '/user_accounts/<int:id>/')
 
 from pmaster.api.employee import EmployeeEntity
 

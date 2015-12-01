@@ -19,7 +19,7 @@ class AccessCardResource(EntityResource):
     entity_class = AccessCardEntity
 
 api.add_resource(AccessCardListResource, '/access_cards/')
-api.add_resource(AccessCardResource, '/access_cards/<int:id>')
+api.add_resource(AccessCardResource, '/access_cards/<int:id>/')
 
 from pmaster.api.access_point import AccessLogEntity
 from pmaster.api.employee import EmployeeEntity
