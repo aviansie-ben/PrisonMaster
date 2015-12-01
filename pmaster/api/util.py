@@ -357,6 +357,37 @@ class EntityResource(Resource):
         
         return {}
     
+    def put(self, id):
+        if self.entity_class is None or not self.entity_class.supports_update:
+            abort(405)
+        
+        result = self.entity_class.get(id)
+        
+        if result is None:
+            abort(404)
+        elif not result.allow_update:
+            abort(403)
+        
+        json = request.get_json()
+        if json is None:
+            abort(415)
+        
+        for n, v in json.items():
+            if n not in self.entity_class.fields:
+                abort(422)
+            elif not result.allow_update_field(n):
+                abort(403)
+            
+            f = self.entity_class.fields[n]
+            if not f.settable:
+                abort(422)
+            
+            result.set_field(n, v)
+        
+        result.commit()
+        
+        return { 'data': result.to_json(self.entity_class.default_get_fields) }
+    
     def patch(self, id):
         if self.entity_class is None or not self.entity_class.supports_update:
             abort(405)
