@@ -17,7 +17,7 @@ class Prisoner(db.Model):
     last_name = db.Column(db.Unicode(64), nullable=False)
     release_date = db.Column(db.Date)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), index=True, nullable=False)
-    cell_id = db.Column(db.Integer, db.ForeignKey('cell.id'), index=True, nullable=False)
+    cell_id = db.Column(db.Integer, db.ForeignKey('cell.id'), index=True)
     
     prison = db.relationship('Prison', backref='prisoners')
     cell = db.relationship('Cell', backref='prisoners')
@@ -59,8 +59,8 @@ class PrisonerIsolation(db.Model):
             self.low_prisoner_id = p1_id
             self.high_prisoner_id = p2_id
         else:
-            self.low_prisoner_id = p1_id
-            self.high_prisoner_id = p2_id
+            self.low_prisoner_id = p2_id
+            self.high_prisoner_id = p1_id
     
     low_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
     high_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
