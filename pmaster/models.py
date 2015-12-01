@@ -144,6 +144,11 @@ class AccessCard(db.Model):
 class AccessLog(db.Model):
     __tablename__ = 'access_log'
     
+    def __init__(self, timestamp, access_point, access_card):
+        self.timestamp = timestamp
+        self.access_point = access_point
+        self.access_card = access_card
+    
     timestamp = db.Column(db.DateTime, nullable=False)
     access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), nullable=False)
     access_card_id = db.Column(db.Integer, db.ForeignKey('access_card.id'), nullable=False)
