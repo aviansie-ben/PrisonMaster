@@ -6,11 +6,23 @@
         var ctrl = this;
 
         ctrl.prisonerJSON = "";
+        ctrl.prisonerID = 0;
+        ctrl.otherPID;
         ctrl.submitPrisoner = submitPrisoner;
         ctrl.prisonerOptions = prisonerOptions;
+        ctrl.updatePrisoner = updatePrisoner;
+        ctrl.isolatePrisoner = isolatePrisoner;
+        ctrl.unisolatePrisoner = unisolatePrisoner;
 
         function submitPrisoner() {
             prisonersResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
+                ctrl.prisonerID = response.data.id;
+                console.log("Success!");
+            });
+        }
+
+        function updatePrisoner() {
+            prisonersResource.update({id:ctrl.prisonerID}, ctrl.prisonerJSON).$promise.then(function(response) {
                 console.log("Success!");
             });
         }
@@ -18,6 +30,19 @@
         function prisonerOptions() {
             prisonersResource.options().$promise.then(function(response) {
                 ctrl.prisonerJSON = angular.toJson(response);
+                console.log("Success!");
+            });
+        }
+
+        function isolatePrisoner() {
+            console.log("called");
+            prisonersResource.isolate({id:ctrl.prisonerID}, {id:ctrl.otherPID}).$promise.then(function() {
+                console.log("Success!");
+            });
+        }
+
+        function unisolatePrisoner() {
+            prisonersResource.unisolate({id:ctrl.prisonerID}, {id:ctrl.otherPID}).$promise.then(function() {
                 console.log("Success!");
             });
         }

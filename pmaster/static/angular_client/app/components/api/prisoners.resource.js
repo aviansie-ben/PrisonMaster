@@ -6,9 +6,11 @@
         return $resource(
             "/api/prisoners/:id/", {id:'@id'},
             {
-                "update": {method: "PATCH"},
+                "update": {method: "PUT"},
                 'save':   {method:'POST', transformRequest:transform},
-                'options': {method:'OPTIONS'}
+                'options': {method:'OPTIONS'},
+                'isolate': {method:'PATCH', transformRequest:isoTransform},
+                'unisolate': {method:'PATCH', transformRequest:unisoTransform},
             });
     }
 
@@ -16,6 +18,18 @@
          //data = angular.toJson(data);
          console.log(data);
          return data;
+     }
+
+     function isoTransform(data, headers) {
+         var req = { "ops":[{ "op":"add", "field":"isolated_prisoners", "value":1 }]};
+         req.ops[0].value = data.id;
+         return angular.toJson(req);
+     }
+
+     function unisoTransform(data, headers) {
+         var req = { "ops":[ { "op":"remove", "field":"isolated_prisoners", "value":1 } ]};
+         req.ops[0].value = data.id;
+         return angular.toJson(req);
      }
 
 })();
