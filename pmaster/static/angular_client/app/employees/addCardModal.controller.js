@@ -1,8 +1,8 @@
 (function() {
     'use strict';
-    angular.module('prisonMaster.employees').controller('AccessCardModalController', accessCardModalController);
+    angular.module('prisonMaster.employees').controller('AddCardModalController', addCardModal);
 
-    function accessCardModalController($uibModalInstance) {
+    function addCardModal($uibModalInstance) {
         var ctrl = this;
 
         ctrl.ok = submit;

@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">Access Cards</h3>
+</div>
+<div class="modal-body">
+    <div class="table-container portlet light">
+        <table style="vertical-align: bottom;" class="table table-striped table-bordered">
+            <thead style="font-size: 1.2em;">
+                <th>ID</th>
+                <th>Expiry</th>
+                <th>Security Clearance</th>
+                <th>
+                    <button style="float:right;" class="btn btn-success" ng-click="ViewCardModalCtrl.openAddCardModal()" popover-placement="left" uib-popover="Add Card" popover-trigger="mouseenter"><i class="glyphicon glyphicon-plus"></i></button>
+                </th>
+            </thead>
+            <tr ng-repeat="card in ViewCardModalCtrl.cards">
+                <td>{{card.id}}</td>
+                <td>{{card.expiry_date}}</td>
+                <td>{{card.security_clearance}}</td>
+                <td style="width:0"><button style="float:right;" class="btn btn-default" ng-click="ViewCardModalCtrl.removeCard($index)" popover-placement="left" uib-popover="Remove Card" popover-trigger="mouseenter"><i style="color: #C22F2B;" class="glyphicon glyphicon-remove"></i></button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ViewCardModalCtrl.ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="ViewCardModalCtrl.cancel()">Cancel</button>
+</div>

@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('prisonMaster.employees', ['ngAnimate', 'ui.router', 'ui.bootstrap'])
+    angular.module('prisonMaster.employees', ['ngAnimate', 'ui.router', 'ui.bootstrap', 'formly', 'formlyBootstrap'])
         .config(function($stateProvider) {
             $stateProvider
                 .state('manageEmployees', {

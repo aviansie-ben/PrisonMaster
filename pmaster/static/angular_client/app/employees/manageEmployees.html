@@ -3,20 +3,22 @@
     <div class="portlet-title">
         <h1 style="text-align:center;">Employee Management</h1>
     </div>
-    <table class="table table-striped table-bordered">
-        <thead>
+    <table style="vertical-align: bottom;" class="table table-striped table-bordered">
+        <thead style="font-size: 1.2em;">
             <th>Name</th>
             <th>Position</th>
             <th>Security Clearance</th>
             <th></th>
-            <th></th>
+            <th>
+                <button class="btn btn-success" ng-click="EmployeesCtrl.openAddEmployeeModal()" popover-placement="left" uib-popover="Add Employee" popover-trigger="mouseenter"><i class="glyphicon glyphicon-plus"></i></button>
+            </th>
         </thead>
         <tr ng-repeat="employee in EmployeesCtrl.employees">
             <td>{{employee.first_name}} {{employee.last_name}}</td>
             <td>{{employee.position}}</td>
             <td>{{employee.security_clearance}}</td>
-            <td style="width:0"><button class="btn btn-default" ng-click="EmployeesCtrl.aCardModal()" uib-popover="Access Cards" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
-            <td style="width:0"><a href="javascript:var%20KICKASSVERSION='2.0';var%20s%20=%20document.createElement('script');s.type='text/javascript';document.body.appendChild(s);s.src='//hi.kickassapp.com/kickass.js';void(0);"><button class="btn btn-danger" uib-popover="Fire" popover-trigger="mouseenter"><i class="glyphicon glyphicon-fire"></i></button></a></td>
+            <td style="width:0"><button class="btn btn-default" ng-click="EmployeesCtrl.openViewCardModal()" uib-popover="Access Cards" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
+            <td style="width:0"><button class="btn btn-danger" ng-click="EmployeesCtrl.openFireEmployeeModal()" uib-popover="Fire" popover-trigger="mouseenter"><i class="glyphicon glyphicon-fire"></i></button></td>
         </tr>
     </table>
 </div>

@@ -5,7 +5,9 @@
     function manageEmployees($uibModal) {
         var ctrl = this;
 
-        ctrl.aCardModal = openACardModal;
+        ctrl.openViewCardModal = openViewCardModal;
+        ctrl.openFireEmployeeModal = openFireEmployeeModal;
+        ctrl.openAddEmployeeModal = openAddEmployeeModal;
 
         ctrl.employees = [
             {
@@ -40,12 +42,30 @@
             }
         ];
 
-        function openACardModal() {
+        function openViewCardModal() {
             $uibModal.open({
                 animation: true,
-                templateUrl: '/static/angular_client/app/employees/accessCardModal.html',
-                controller: 'AccessCardModalController',
-                controllerAs: "ACardModalCtrl"
+                templateUrl: '/static/angular_client/app/employees/viewCardModal.html',
+                controller: 'ViewCardModalController',
+                controllerAs: "ViewCardModalCtrl"
+            });
+        }
+
+        function openFireEmployeeModal() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/employees/fireEmployeeModal.html',
+                controller: 'FireEmployeeModalController',
+                controllerAs: "FireEmployeeModalCtrl"
+            });
+        }
+
+        function openAddEmployeeModal() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/employees/addEmployeeModal.html',
+                controller: 'AddEmployeeModalController',
+                controllerAs: "AddEmployeeModalCtrl"
             });
         }
     }
