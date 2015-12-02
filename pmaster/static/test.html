@@ -41,6 +41,7 @@
                             });
                         });
                         
+                        $('#access-point-label').text(data.data.label);
                         simulateSchedule(new Date());
                     } else {
                         alert('Failed to connected: ' + data.reason);
@@ -167,6 +168,7 @@
         </style>
     </head>
     <body>
+        <h1>Access Point Simulator - <span id="access-point-label"></span></h1>
         <div class="access-point">
             <div class="access-point-light">
             </div>
