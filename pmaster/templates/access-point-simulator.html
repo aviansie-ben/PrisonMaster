@@ -30,6 +30,10 @@
                     socket.emit('handshake', {'id': {{id}} });
                 });
                 
+                socket.on('disconnect', function() {
+                    alert('Disconnected from server!');
+                });
+                
                 socket.on('handshake', function(data) {
                     if (data.status === 'ok') {
                         schedule = [];
