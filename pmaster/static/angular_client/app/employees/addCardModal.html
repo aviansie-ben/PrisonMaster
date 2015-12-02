@@ -1,10 +1,18 @@
 <div class="modal-header">
-       <h3 class="modal-title">This is a modal for giving trustworthy employee shiny access cards...</h3>
-   </div>
-   <div class="modal-body">
-       nothing to see here...
-   </div>
-   <div class="modal-footer">
-       <button class="btn btn-primary" type="button" ng-click="AddCardModalCtrl.ok()">OK</button>
-       <button class="btn btn-warning" type="button" ng-click="AddCardModalCtrl.cancel()">Cancel</button>
-   </div>
+    <h3 class="modal-title">Add Access Card</h3>
+</div>
+<div class="modal-body">
+
+    <form name="AddCardModalCtrl.form" ng-submit="AddCardModalCtrl.onSubmit()" novalidate>
+        <formly-form model="AddCardModalCtrl.model" fields="AddCardModalCtrl.fields">
+            <div style="float: right;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button class="btn btn-warning" type="button" ng-click="AddCardModalCtrl.cancel()">Cancel</button>
+            </div>
+        </formly-form>
+    </form>
+</div>
+<div style="text-align: left;">
+    <h3>Form Data</h3>
+    <pre>{{AddCardModalCtrl.model | json}}</pre>
+</div>

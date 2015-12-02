@@ -5,15 +5,32 @@
     function addCardModal($uibModalInstance) {
         var ctrl = this;
 
-        ctrl.ok = submit;
+        ctrl.onSubmit = onSubmit;
         ctrl.cancel = close;
-
-        function submit() {
-            $uibModalInstance.close();
-        }
+        ctrl.model = {};
+        ctrl.fields = [
+            {
+                type: 'datepicker',
+                key: 'expiry_date',
+                templateOptions: {
+                    label: 'Expiry Date'
+                }
+            },
+            {
+                type: 'input',
+                key: 'security_clearance',
+                templateOptions: {
+                    label: 'Security Clearance'
+                }
+            }
+        ];
 
         function close() {
             $uibModalInstance.dismiss('cancel');
+        }
+
+        function onSubmit() {
+            $uibModalInstance.close();
         }
     }
 })();
