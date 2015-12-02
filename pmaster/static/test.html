@@ -4,15 +4,26 @@
         <title>Access Point Simulator</title>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.7/socket.io.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.8/jquery.timepicker.min.js"></script>
         <script type="text/javascript">
             var socket;
             
             var lockTimeout;
+            var schedule;
             var unlocked = false;
             var disabled = false;
             
             $(document).ready(function() {
                 'use strict';
+                
+                $('#time-input').timepicker();
+                $('#time-input').timepicker('setTime', new Date());
+                
+                $('#time-btn').on('click', function() {
+                    console.log($('#time-input').timepicker('getTime'));
+                    simulateSchedule($('#time-input').timepicker('getTime'));
+                });
+                
                 socket = io.connect('ws://' + document.domain + ':' + location.port + '/ap_websocket');
                 
                 socket.on('connect', function() {
@@ -20,8 +31,20 @@
                 });
                 
                 socket.on('handshake', function(data) {
-                    console.log(data);
-                    lock();
+                    if (data.status === 'ok') {
+                        schedule = [];
+                        
+                        $.each(data.data.schedule, function(i, s) {
+                            schedule.push({
+                                open: Date.parse("1970-01-01T" + s.open) / 1000,
+                                close: Date.parse("1970-01-01T" + s.close) / 1000,
+                            });
+                        });
+                        
+                        simulateSchedule(new Date());
+                    } else {
+                        alert('Failed to connected: ' + data.reason);
+                    }
                 });
                 
                 socket.on('lock', lock);
@@ -59,7 +82,7 @@
                 $('.access-point-light').addClass('open-light');
                 
                 window.clearTimeout(lockTimeout);
-                lockTimeout = window.setTimeout(lock, 10000)
+                lockTimeout = window.setTimeout(lock, 10000);
             }
             
             function unlockPermanently() {
@@ -79,7 +102,28 @@
                 
                 window.clearTimeout(lockTimeout);
             }
+            
+            function simulateSchedule(time) {
+                var shouldUnlock = false;
+                time = time.getHours() * 60 * 60 + time.getMinutes() * 60 + time.getSeconds();
+                
+                $.each(schedule, function(i, s) {
+                    if (!shouldUnlock) {
+                        if (time >= s.open && time < s.close) {
+                            shouldUnlock = true;
+                        }
+                    }
+                });
+                
+                if (shouldUnlock) {
+                    unlockPermanently();
+                } else {
+                    lock();
+                }
+            }
         </script>
+        
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.8/jquery.timepicker.min.css" />
         <style type="text/css">
             .access-point {
                 width: 300px;
@@ -132,7 +176,7 @@
                 <button type="button" id="swipe-btn">Swipe</button>
             </div>
             <div class="access-point-time-form">
-                <input type="text" id="time-input" />
+                <input type="text" class="time ui-timepicker-input" id="time-input" />
                 <button type="button" id="time-btn">Simulate Time</button>
             </div>
         </div>

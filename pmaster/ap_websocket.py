@@ -32,6 +32,9 @@ class ConnectedAccessPoint(object):
     def access_point(self):
         return AccessPoint.query.filter_by(id=self.ap_id).first()
 
+def get_schedule_json(ap):
+    return [ {'open': s.time_open.isoformat(), 'close': s.time_close.isoformat()} for s in ap.schedules ]
+
 ap_lock = Lock()
 ap_connected = {}
 
@@ -54,7 +57,7 @@ def ap_handshake(json):
                     
                     session['id'] = access_point.id
                     
-                    emit('handshake', {'status': 'ok', 'data': {'label': access_point.label}})
+                    emit('handshake', {'status': 'ok', 'data': {'label': access_point.label, 'schedule': get_schedule_json(access_point)}})
                 else:
                     emit('handshake', {'status': 'error', 'reason': 'already_connected'})
         else:
