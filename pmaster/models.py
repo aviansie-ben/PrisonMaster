@@ -30,6 +30,19 @@ class Prisoner(db.Model):
     def isolated_prisoners(self):
         return [ r.high_prisoner for r in self.low_isolated_prisoners ] + [ r.low_prisoner for r in self.high_isolated_prisoners ]
     
+    @isolated_prisoners.setter
+    def isolated_prisoners(self, value):
+        existing_ip = self.isolated_prisoners
+        new_ip = [ lv.entity for lv in value ]
+        
+        for other_prisoner in existing_ip:
+            if other_prisoner not in new_ip:
+                self.remove_isolated_prisoner(other_prisoner)
+        
+        for other_prisoner in new_ip:
+            if other_prisoner not in existing_ip:
+                self.add_isolated_prisoner(other_prisoner)
+    
     def add_isolated_prisoner(self, other_prisoner):
         if self.id < other_prisoner.id:
             isolation = next(( r for r in self.low_isolated_prisoners if r.high_prisoner_id == other_prisoner.id ), None)
