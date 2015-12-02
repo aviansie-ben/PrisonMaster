@@ -95,11 +95,25 @@ class EntityField(object):
         return self.type.__name__
 
 class EntityListField(EntityField):
-    def __init__(self, entity_type, adder=None, remover=None):
-        EntityField.__init__(self, entity_type, False, False)
+    def __init__(self, entity_type, adder=None, remover=None, settable=False, required=False):
+        EntityField.__init__(self, entity_type, settable, required)
         
         self.adder = adder
         self.remover = remover
+    
+    def from_json(self, value):
+        if value is None:
+            return []
+        else:
+            return [ EntityField.from_json(self, lv) for lv in value ]
+    
+    def to_json(self, value, sub_fields={}):
+        if value is None:
+            return []
+        elif isinstance(value, list):
+            return [ EntityField.to_json(self, lv, sub_fields) for lv in value ]
+        else:
+            raise ValueError('Incorrect type for field')
     
     @property
     def supported_ops(self):
@@ -209,10 +223,7 @@ class ModelEntity(Entity):
             else:
                 val = f.type(val)
         
-        if isinstance(val, list):
-            return [ f.to_json(lv, sub_fields) for lv in val ]
-        else:
-            return f.to_json(val, sub_fields)
+        return f.to_json(val, sub_fields)
     
     def to_json(self, fields):
         result = {}
