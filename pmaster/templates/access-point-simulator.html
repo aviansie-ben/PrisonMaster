@@ -27,7 +27,7 @@
                 socket = io.connect('ws://' + document.domain + ':' + location.port + '/ap_websocket');
                 
                 socket.on('connect', function() {
-                    socket.emit('handshake', {'id': 1});
+                    socket.emit('handshake', {'id': {{id}} });
                 });
                 
                 socket.on('handshake', function(data) {
