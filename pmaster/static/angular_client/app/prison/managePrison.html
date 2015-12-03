@@ -1,1 +1,25 @@
-PRISON MANAGEMENT
+<div class="col-md-1"></div>
+<div class="table-container, col-md-10" style="background:#FFFFFF; border-radius:5px;">
+    <div class="portlet-title">
+        <h1 style="text-align:center;">Prison Management</h1>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead style="font-size: 1.15em;">
+            <th></th>
+            <th>Access Point</th>
+            <th>Security Clearance</th>
+            <th>Status</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tr ng-repeat="ap in PrisonCtrl.accessPoints">
+            <td style="width:0"><button class="btn btn-success" ng-click="PrisonCtrl.moveModal(prisoner)" uib-popover="Move to" popover-trigger="mouseenter"><i class="glyphicon glyphicon-arrow-right"></i></button></td>
+            <td>{{ap.label}}</td>
+            <td>{{ap.security_clearance}}</td>
+            <td>{{ap.status}}</td>
+            <td style="width:0"><button class="btn btn-default" ng-click="PrisonCtrl.openLog()" uib-popover="View log" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
+            <td style="width:0"><button class="btn btn-primary" ng-click="PrisonCtrl.openSchedule()" uib-popover="Schedule" popover-trigger="mouseenter"><i class="glyphicon glyphicon-time"></i></button></td>
+        </tr>
+    </table>
+</div>
+<div class="col-md-1"></div>

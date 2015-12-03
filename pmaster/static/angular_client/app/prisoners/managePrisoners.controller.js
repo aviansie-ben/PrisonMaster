@@ -8,6 +8,7 @@
         ctrl.isolateModal = openIsolate;
         ctrl.cellmatesModal = openCellmates;
         ctrl.moveModal = openMove;
+        ctrl.releaseModal = openRelease;
 
         ctrl.prisoners = [
             {
@@ -129,5 +130,21 @@
             });
         }
 
+        function openRelease(prisoner) {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/prisoners/releasePrisonerModal.html',
+                controller: 'ReleasePrisonerModalController',
+                controllerAs: "RelPrisonerModalCtrl",
+                resolve: {
+                    prisonerList: function() {
+                        return ctrl.prisoners;
+                    },
+                    prisoner: function() {
+                        return prisoner;
+                    }
+                }
+            });
+        }
     }
 })();
