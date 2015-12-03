@@ -15,7 +15,71 @@
                 id: 1,
                 label: "Cell 1",
                 security_clearance: 4,
-                status: "opened"
+                status: "opened",
+                access_logs: [
+                    {
+                        access_card: {
+                            employee: {
+                                    first_name: "Darth",
+                                    id: 3,
+                                    last_name: "Sithious",
+                                    position: "Prisoner",
+                                    security_clearance: 4
+                            },
+                            expiry_date: "2015-12-04",
+                            id: 1,
+                            security_clearance: 8,
+                        },
+                        timestamp: "2015-12-03T20:57:07"
+                    },
+                    {
+                        access_card: {
+                            employee: {
+                                    first_name: "Yoda",
+                                    id: 2,
+                                    last_name: "NumberWang",
+                                    position: "Master Jedi",
+                                    security_clearance: 4
+                            },
+                            expiry_date: "2015-12-04",
+                            id: 2048,
+                            security_clearance: 5,
+                        },
+                        timestamp: "2016-11-09T12:05:09"
+                    },
+                    {
+                        access_card: {
+                            employee: {
+                                    first_name: "Darth",
+                                    id: 5,
+                                    last_name: "BubbaShrimpious",
+                                    position: "Sith Lord",
+                                    security_clearance: 4000
+                            },
+                            expiry_date: "2015-12-04",
+                            id: 3,
+                            security_clearance: 8,
+                        },
+                        timestamp: "2015-09-04T21:59:07"
+                    }
+                ],
+                schedules: [
+                    {
+                        id: 1,
+                        time_open: "09:00:00",
+                        time_close: "10:00:00"
+                    },
+                    {
+                        id: 2,
+                        time_close: "14:00:00",
+                        time_open: "15:00:00"
+                    },
+                    {
+                        id: 3,
+                        time_close: "19:00:00",
+                        time_open: "19:00:05"
+                    }
+                ]
             },
             {
                 id: 2,
@@ -72,22 +136,32 @@
         }
 
         // opens log modal
-        function openLog() {
+        function openLog(ap) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/prison/logModal.html',
                 controller: 'LogModalController',
-                controllerAs: 'LogModalCtrl'
+                controllerAs: 'LogModalCtrl',        
+                resolve: {
+                    accessPoint: function() {
+                        return ap;
+                    }
+                }
             });
         }
 
         // opens schedule modal
-        function openSchedule() {
+        function openSchedule(ap) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/prison/scheduleModal.html',
                 controller: 'ScheduleModalController',
-                controllerAs: 'SchedModalCtrl'
+                controllerAs: 'SchedModalCtrl',
+                resolve: {
+                    accessPoint: function() {
+                        return ap;
+                    }
+                }
             });
         }
     }

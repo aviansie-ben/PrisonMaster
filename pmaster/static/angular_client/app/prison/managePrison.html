@@ -15,8 +15,8 @@
             <td style="width:0"><input ng-disabled="ap.status=='not_connected'" toggle-checkbox class="form-control schedule" data-on="Opened" data-off="Closed" data-onstyle="success" data-offstyle="danger" ng-model="PrisonCtrl.switchSettings[$index]" ng-change='PrisonCtrl.toggleAP($index)' type="checkbox"></td>
             <td>{{ap.label}}</td>
             <td>{{ap.security_clearance}}</td>
-            <td style="width:0"><button class="btn btn-default" ng-click="PrisonCtrl.openLog()" uib-popover="View log" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
-            <td style="width:0"><button class="btn btn-primary" ng-click="PrisonCtrl.openSchedule()" uib-popover="Schedule" popover-trigger="mouseenter"><i class="glyphicon glyphicon-time"></i></button></td>
+            <td style="width:0"><button class="btn btn-default" ng-click="PrisonCtrl.logModal(ap)" uib-popover="View log" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
+            <td style="width:0"><button class="btn btn-primary" ng-click="PrisonCtrl.scheduleModal(ap)" uib-popover="Schedule" popover-trigger="mouseenter"><i class="glyphicon glyphicon-time"></i></button></td>
         </tr>
     </table>
     <h3>Form Data</h3>
