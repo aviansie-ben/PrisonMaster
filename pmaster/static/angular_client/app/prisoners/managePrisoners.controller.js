@@ -2,7 +2,7 @@
     'use strict';
     angular.module('prisonMaster.prisoners').controller('ManagePrisonersController', managePrisoners);
 
-    function managePrisoners($uibModal) {
+    function managePrisoners($uibModal, prisoners) {
         var ctrl = this;
 
         ctrl.isolateModal = openIsolate;
@@ -10,66 +10,7 @@
         ctrl.moveModal = openMove;
         ctrl.releaseModal = openRelease;
 
-        ctrl.prisoners = [
-            {
-                first_name: "Darth",
-                last_name: "Vader",
-                cell: {
-                    number: 1
-                },
-                id: 124135,
-                isolated_prisoners: [
-                    {
-                        first_name: "Darth",
-                        last_name: "Sithius",
-                        cell: {
-                            number: 2
-                        },
-                        id: 124132
-                    },
-                    {
-                        first_name: "Bubba",
-                        last_name: "Shrimp",
-                        cell: {
-                            number: 2
-                        },
-                        id: 124131
-                    }
-                ]
-            },
-            {
-                first_name: "Darth",
-                last_name: "Brooks",
-                cell: {
-                    number: 1
-                },
-                id: 124134
-            },
-            {
-                first_name: "Darth",
-                last_name: "SaladHead",
-                cell: {
-                    number: 1
-                },
-                id: 124133
-            },
-            {
-                first_name: "Darth",
-                last_name: "Sithius",
-                cell: {
-                    number: 2
-                },
-                id: 124132
-            },
-            {
-                first_name: "Bubba",
-                last_name: "Shrimp",
-                cell: {
-                    number: 2
-                },
-                id: 124131
-            }
-        ];
+        ctrl.prisoners = prisoners.data;
 
         function openIsolate(prisoner) {
             $uibModal.open({
@@ -109,8 +50,8 @@
                     prisoner: function() {
                         return prisoner;
                     },
-                    cellmates: function() {
-                        return ctrl.prisoners;
+                    cellmates: function(prisonersResource) {
+                        return prisonersResource.cellmates({id:prisoner.id}).$promise;
                     }
                 }
             });

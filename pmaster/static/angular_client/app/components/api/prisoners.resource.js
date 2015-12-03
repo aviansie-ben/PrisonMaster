@@ -1,23 +1,24 @@
 (function() {
     'use strict';
-    angular.module('prisonMaster.api').factory('prisonersResource', prisoners)
+    angular.module('prisonMaster.api').factory('prisonersResource', prisoners);
 
     function prisoners($resource) {
         return $resource(
             "/api/prisoners/:id/", {id:'@id'},
             {
                 "update": {method: "PUT"},
-                'save':   {method:'POST', transformRequest:transform},
+                'save':   {method:'POST'},
                 'options': {method:'OPTIONS'},
                 'isolate': {method:'PATCH', transformRequest:isoTransform},
                 'unisolate': {method:'PATCH', transformRequest:unisoTransform},
+                'list':  {method:'GET', url:"/api/prisoners/?fields=*,cell.number,isolated_prisoners.first_name,isolated_prisoners.last_name,isolated_prisoners.id"},
+                'cellmates': {method:'GET', url:"/api/prisoners/:id/?fields=cell.prisoners.*", params:{id:'@id'}, transformResponse:transformCellmates, isArray:true}
             });
     }
 
-    function transform(data, headers) {
-         //data = angular.toJson(data);
-         console.log(data);
-         return data;
+    function transformCellmates(response) {
+        var stuff = angular.fromJson(response);
+        return stuff.data.cell.prisoners;
      }
 
      function isoTransform(data, headers) {

@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('prisonMaster.api').factory('accessCardsResource', accessCards)
+    angular.module('prisonMaster.api').factory('accessCardsResource', accessCards);
 
     function accessCards($resource) {
         return $resource(

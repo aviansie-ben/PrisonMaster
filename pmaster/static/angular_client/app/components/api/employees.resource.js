@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('prisonMaster.api').factory('employeesResource', employees)
+    angular.module('prisonMaster.api').factory('employeesResource', employees);
 
     function employees($resource) {
         return $resource(
