@@ -39,7 +39,7 @@
                 id: 5,
                 label: "Warden's Washroom",
                 security_clearance: 2,
-                status: "open"
+                status: "opened"
             },
             {
                 id: 6,
@@ -49,9 +49,26 @@
             }
         ];
 
-        // toggles an access point open or closed
-        function toggleAP() {
+        ctrl.switchSettings = generateSettings();
 
+        // generate switch settings from access points
+        function generateSettings() {
+            var s = [];
+            for (var i = 0; i < ctrl.accessPoints.length; i++) {
+                if (ctrl.accessPoints[i].status == "opened")
+                    s.push(true);
+                else
+                    s.push(false);
+            }
+            return s;
+        }
+
+        // toggles an access point opened or closed
+        function toggleAP(i) {
+            if (ctrl.switchSettings[i] === true)
+                ctrl.accessPoints[i].status = "opened";
+            else
+                ctrl.accessPoints[i].status = "closed";
         }
 
         // opens log modal
