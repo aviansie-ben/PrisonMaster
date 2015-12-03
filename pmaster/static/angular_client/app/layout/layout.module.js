@@ -11,7 +11,7 @@
         .run(function(formlyConfig) {
             formlyConfig.setType({
                 name: 'datepicker',
-                templateUrl:  '/static/angular_client/app/layout/datepicker.html',
+                templateUrl: '/static/angular_client/app/layout/datepicker.html',
                 wrapper: ['bootstrapLabel', 'bootstrapHasError'],
                 defaultOptions: {
                     templateOptions: {
@@ -28,6 +28,11 @@
                         $scope.datepicker.opened = true;
                     };
                 }]
+            });
+            formlyConfig.setType({
+                name: 'multiSelect',
+                extends: 'select',
+                template: '<select multiple class="form-control" ng-model="model[options.key]"></select>'
             });
         });
 })();
