@@ -32,7 +32,7 @@ PrisonerEntity.fields = {
     'release_date': EntityField(date, required=False),
     'prison': EntityField(PrisonEntity),
     'cell': EntityField(CellEntity),
-    'isolated_prisoners': EntityListField(PrisonerEntity,
+    'isolated_prisoners': EntityListField(PrisonerEntity, settable=True,
         adder=lambda entity, element: entity.entity.add_isolated_prisoner(element.entity),
         remover=lambda entity, element: entity.entity.remove_isolated_prisoner(element.entity)),
 }

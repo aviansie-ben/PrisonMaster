@@ -23,7 +23,13 @@ def run():
 def index():
     return render_template('index.html')
 
+@app.route('/access-point/<int:id>/')
+def ap_simulator(id):
+    return render_template('access-point-simulator.html', id=id)
+
 from pmaster.models import *
+
 from pmaster.api import api_blueprint
+from pmaster import ap_websocket
 
 app.register_blueprint(api_blueprint, url_prefix='/api')

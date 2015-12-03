@@ -95,11 +95,25 @@ class EntityField(object):
         return self.type.__name__
 
 class EntityListField(EntityField):
-    def __init__(self, entity_type, adder=None, remover=None):
-        EntityField.__init__(self, entity_type, False, False)
+    def __init__(self, entity_type, adder=None, remover=None, settable=False, required=False):
+        EntityField.__init__(self, entity_type, settable, required)
         
         self.adder = adder
         self.remover = remover
+    
+    def from_json(self, value):
+        if value is None:
+            return []
+        else:
+            return [ EntityField.from_json(self, lv) for lv in value ]
+    
+    def to_json(self, value, sub_fields={}):
+        if value is None:
+            return []
+        elif isinstance(value, list):
+            return [ EntityField.to_json(self, lv, sub_fields) for lv in value ]
+        else:
+            raise ValueError('Incorrect type for field')
     
     @property
     def supported_ops(self):
@@ -209,10 +223,7 @@ class ModelEntity(Entity):
             else:
                 val = f.type(val)
         
-        if isinstance(val, list):
-            return [ f.to_json(lv, sub_fields) for lv in val ]
-        else:
-            return f.to_json(val, sub_fields)
+        return f.to_json(val, sub_fields)
     
     def to_json(self, fields):
         result = {}
@@ -291,28 +302,33 @@ class EntityListResource(Resource):
         if self.entity_class is None or not self.entity_class.supports_create and False:
             abort(405)
         
-        if not self.entity_class.allow_create():
-            abort(403)
+        @use_args({'fields': fields.String(validate=field_validator(self.entity_class))})
+        def post(self, id, args):
+            fields = args['fields'].split(',') if 'fields' in args else self.entity_class.default_get_fields
+            if not self.entity_class.allow_create():
+                abort(403)
+            
+            json = request.get_json()
+            if json is None:
+                abort(415)
+            
+            if any( not self.entity_class.fields[k].settable for k in json.keys() ):
+                abort(422)
+            elif any( f.required and n not in json for n, f in self.entity_class.fields.items() ):
+                abort(422)
+            elif any( not self.entity_class.allow_create_with_field(k) for k in json.keys() ):
+                abort(403)
+            
+            e = self.entity_class.create_new()
+            
+            for k, v in json.items():
+                e.set_field(k, v)
+            
+            e.commit()
+            
+            return { 'data': e.to_json(fields) }
         
-        json = request.get_json()
-        if json is None:
-            abort(415)
-        
-        if any( not self.entity_class.fields[k].settable for k in json.keys() ):
-            abort(422)
-        elif any( f.required and n not in json for n, f in self.entity_class.fields.items() ):
-            abort(422)
-        elif any( not self.entity_class.allow_create_with_field(k) for k in json.keys() ):
-            abort(403)
-        
-        e = self.entity_class.create_new()
-        
-        for k, v in json.items():
-            e.set_field(k, v)
-        
-        e.commit()
-        
-        return { 'data': e.to_json(self.entity_class.default_get_fields) }
+        return post(self, id)
     
     def options(self):
         if self.entity_class is None:
@@ -361,80 +377,90 @@ class EntityResource(Resource):
         if self.entity_class is None or not self.entity_class.supports_update:
             abort(405)
         
-        result = self.entity_class.get(id)
-        
-        if result is None:
-            abort(404)
-        elif not result.allow_update:
-            abort(403)
-        
-        json = request.get_json()
-        if json is None:
-            abort(415)
-        
-        for n, v in json.items():
-            if n not in self.entity_class.fields:
-                abort(422)
-            elif not result.allow_update_field(n):
+        @use_args({'fields': fields.String(validate=field_validator(self.entity_class))})
+        def put(self, id, args):
+            fields = args['fields'].split(',') if 'fields' in args else self.entity_class.default_get_fields
+            result = self.entity_class.get(id)
+            
+            if result is None:
+                abort(404)
+            elif not result.allow_update:
                 abort(403)
             
-            f = self.entity_class.fields[n]
-            if not f.settable:
-                abort(422)
+            json = request.get_json()
+            if json is None:
+                abort(415)
             
-            result.set_field(n, v)
+            for n, v in json.items():
+                if n not in self.entity_class.fields:
+                    abort(422)
+                elif not result.allow_update_field(n):
+                    abort(403)
+                
+                f = self.entity_class.fields[n]
+                if not f.settable:
+                    abort(422)
+                
+                result.set_field(n, v)
+            
+            result.commit()
+            
+            return { 'data': result.to_json(fields) }
         
-        result.commit()
-        
-        return { 'data': result.to_json(self.entity_class.default_get_fields) }
+        return put(self, id)
     
     def patch(self, id):
         if self.entity_class is None or not self.entity_class.supports_update:
             abort(405)
         
-        result = self.entity_class.get(id)
-        
-        if result is None:
-            abort(404)
-        elif not result.allow_update:
-            abort(403)
-        
-        json = request.get_json()
-        if json is None:
-            abort(415)
-        
-        for op_dict in json['ops']:
-            o = op_dict['op']
-            n = op_dict['field']
-            v = op_dict['value']
+        @use_args({'fields': fields.String(validate=field_validator(self.entity_class))})
+        def patch(self, id, args):
+            fields = args['fields'].split(',') if 'fields' in args else self.entity_class.default_get_fields
+            result = self.entity_class.get(id)
             
-            if n not in self.entity_class.fields:
-                abort(422)
-            elif not result.allow_update_field(n):
+            if result is None:
+                abort(404)
+            elif not result.allow_update:
                 abort(403)
             
-            f = self.entity_class.fields[n]
-            if o == 'set':
-                if not f.settable:
-                    abort(422)
+            json = request.get_json()
+            if json is None:
+                abort(415)
+            
+            for op_dict in json['ops']:
+                o = op_dict['op']
+                n = op_dict['field']
+                v = op_dict['value']
                 
-                result.set_field(n, v)
-            elif o == 'add':
-                if not isinstance(f, EntityListField) or f.adder is None:
+                if n not in self.entity_class.fields:
                     abort(422)
+                elif not result.allow_update_field(n):
+                    abort(403)
                 
-                result.add_to_field(n, v)
-            elif o == 'remove':
-                if not isinstance(f, EntityListField) or f.remover is None:
+                f = self.entity_class.fields[n]
+                if o == 'set':
+                    if not f.settable:
+                        abort(422)
+                    
+                    result.set_field(n, v)
+                elif o == 'add':
+                    if not isinstance(f, EntityListField) or f.adder is None:
+                        abort(422)
+                    
+                    result.add_to_field(n, v)
+                elif o == 'remove':
+                    if not isinstance(f, EntityListField) or f.remover is None:
+                        abort(422)
+                    
+                    result.remove_from_field(n, v)
+                else:
                     abort(422)
-                
-                result.remove_from_field(n, v)
-            else:
-                abort(422)
+            
+            result.commit()
+            
+            return { 'data': result.to_json(fields) }
         
-        result.commit()
-        
-        return { 'data': result.to_json(self.entity_class.default_get_fields) }
+        return patch(self, id)
     
     def options(self, id):
         if self.entity_class is None:
