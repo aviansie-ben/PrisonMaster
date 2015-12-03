@@ -7,7 +7,7 @@
 
         ctrl.toggleAP = toggleAP;
         ctrl.logModal = openLog;
-        ctrl.scheduleModal = openSchedule;
+        ctrl.viewScheduleModal = openViewSchedule;
 
         // mock data
         ctrl.accessPoints = [
@@ -141,7 +141,7 @@
                 animation: true,
                 templateUrl: '/static/angular_client/app/prison/logModal.html',
                 controller: 'LogModalController',
-                controllerAs: 'LogModalCtrl',        
+                controllerAs: 'LogModalCtrl',
                 resolve: {
                     accessPoint: function() {
                         return ap;
@@ -151,12 +151,12 @@
         }
 
         // opens schedule modal
-        function openSchedule(ap) {
+        function openViewSchedule(ap) {
             $uibModal.open({
                 animation: true,
-                templateUrl: '/static/angular_client/app/prison/scheduleModal.html',
-                controller: 'ScheduleModalController',
-                controllerAs: 'SchedModalCtrl',
+                templateUrl: '/static/angular_client/app/prison/viewScheduleModal.html',
+                controller: 'ViewScheduleModalController',
+                controllerAs: 'ViewSchedModalCtrl',
                 resolve: {
                     accessPoint: function() {
                         return ap;

@@ -11,16 +11,16 @@
         ctrl.ok = submit;
         ctrl.cancel = close;
 
+        function deleteLog(i) {
+            ctrl.logs.splice(i, 1);
+        }
+
         function submit() {
             $uibModalInstance.close();
         }
 
         function close() {
             $uibModalInstance.dismiss('cancel');
-        }
-
-        function deleteLog(i) {
-            ctrl.logs.splice(i, 1);
         }
     }
 })();
