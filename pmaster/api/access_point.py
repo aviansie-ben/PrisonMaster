@@ -50,6 +50,8 @@ class AccessPointEntity(ModelEntity):
                         if not ap.disabled:
                             ap.disable()
                             ap.lock()
+        else:
+            ModelEntity.set_field(self, name, value)
 
 class AccessLogEntity(ModelEntity):
     model = AccessLog
