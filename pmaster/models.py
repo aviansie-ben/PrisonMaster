@@ -78,8 +78,8 @@ class PrisonerIsolation(db.Model):
     low_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
     high_prisoner_id = db.Column(db.Integer, db.ForeignKey('prisoner.id'), index=True, nullable=False)
     
-    low_prisoner = db.relationship('Prisoner', foreign_keys=[low_prisoner_id], backref='low_isolated_prisoners')
-    high_prisoner = db.relationship('Prisoner', foreign_keys=[high_prisoner_id], backref='high_isolated_prisoners')
+    low_prisoner = db.relationship('Prisoner', foreign_keys=[low_prisoner_id], backref=db.backref('low_isolated_prisoners', cascade='all, delete-orphan'))
+    high_prisoner = db.relationship('Prisoner', foreign_keys=[high_prisoner_id], backref=db.backref('high_isolated_prisoners', cascade='all, delete-orphan'))
     
     __table_args__ = (
         db.PrimaryKeyConstraint('low_prisoner_id', 'high_prisoner_id'),
@@ -94,7 +94,7 @@ class Cell(db.Model):
     number = db.Column(db.Integer, nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), nullable=False)
     
-    prison = db.relationship('Prison', backref='cells')
+    prison = db.relationship('Prison', backref=db.backref('cells', cascade='all, delete-orphan'))
     
     __table_args__ = (
         db.Index('ix_cell_number', 'prison_id', 'number', unique=True),
@@ -110,7 +110,7 @@ class UserAccount(db.Model):
     password_hash = db.Column(db.Text(), nullable=False)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), index=True)
     
-    employee = db.relationship('Employee', backref=db.backref('user_account', uselist=False))
+    employee = db.relationship('Employee', backref=db.backref('user_account', cascade='all', uselist=False))
     
     @property
     def password(self):
@@ -149,7 +149,7 @@ class AccessCard(db.Model):
     expiry_date = db.Column(db.Date)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), index=True, nullable=False)
     
-    employee = db.relationship('Employee', backref='access_cards')
+    employee = db.relationship('Employee', backref=db.backref('access_cards', cascade='all, delete-orphan'))
     
     def __repr__(self):
         return '<Access Card ' + str(self.id) + '>'
@@ -166,8 +166,8 @@ class AccessLog(db.Model):
     access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), nullable=False)
     access_card_id = db.Column(db.Integer, db.ForeignKey('access_card.id'), nullable=False)
     
-    access_point = db.relationship('AccessPoint', backref='access_logs')
-    access_card = db.relationship('AccessCard', backref='access_logs')
+    access_point = db.relationship('AccessPoint', backref=db.backref('access_logs', cascade='all, delete-orphan'))
+    access_card = db.relationship('AccessCard', backref=db.backref('access_logs', cascade='all, delete-orphan'))
     
     __table_args__ = (
         db.PrimaryKeyConstraint('access_point_id', 'timestamp'),
@@ -183,7 +183,7 @@ class AccessPoint(db.Model):
     security_clearance = db.Column(db.Integer, nullable=False)
     prison_id = db.Column(db.Integer, db.ForeignKey('prison.id'), index=True, nullable=False)
     
-    prison = db.relationship('Prison', backref='access_points')
+    prison = db.relationship('Prison', backref=db.backref('access_points', cascade='all, delete-orphan'))
     
     def __repr__(self):
         return '<Access Point ' + str(self.id) + '>'
@@ -194,7 +194,7 @@ class Schedule(db.Model):
     time_close = db.Column(db.Time, nullable=False)
     access_point_id = db.Column(db.Integer, db.ForeignKey('access_point.id'), index=True, nullable=False)
     
-    access_point = db.relationship('AccessPoint', backref='schedules')
+    access_point = db.relationship('AccessPoint', backref=db.backref('schedules', cascade='all, delete-orphan'))
     
     def __repr__(self):
         return '<Schedule ' + str(self.id) + '>'
