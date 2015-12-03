@@ -2,12 +2,12 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('AddCardModalController', addCardModal);
 
-    function addCardModal($uibModalInstance) {
+    function addCardModal($uibModalInstance, accessCardsResource, employeeID, cardList) {
         var ctrl = this;
 
         ctrl.onSubmit = onSubmit;
         ctrl.cancel = close;
-        ctrl.model = {};
+        ctrl.model = {employee:employeeID};
         ctrl.fields = [
             {
                 type: 'datepicker',
@@ -17,7 +17,7 @@
                 }
             },
             {
-                type: 'input',
+                type: 'numInput',
                 key: 'security_clearance',
                 templateOptions: {
                     label: 'Security Clearance'
@@ -30,7 +30,10 @@
         }
 
         function onSubmit() {
-            $uibModalInstance.close();
+            accessCardsResource.save(ctrl.model).$promise.then(function(response) {
+                cardList.push(response.data);
+                $uibModalInstance.close();
+            });
         }
     }
 })();

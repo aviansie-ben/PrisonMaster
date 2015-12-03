@@ -16,7 +16,7 @@
                 <td>{{card.id}}</td>
                 <td>{{card.expiry_date}}</td>
                 <td>{{card.security_clearance}}</td>
-                <td style="width:0"><button style="float:right;" class="btn btn-default" ng-click="ViewCardModalCtrl.removeCard($index)" popover-placement="left" uib-popover="Remove Card" popover-trigger="mouseenter"><i style="color: #C22F2B;" class="glyphicon glyphicon-remove"></i></button></td>
+                <td style="width:0"><button style="float:right;" class="btn btn-default" ng-click="ViewCardModalCtrl.removeCard(card.id)" popover-placement="left" uib-popover="Remove Card" popover-trigger="mouseenter"><i style="color: #C22F2B;" class="glyphicon glyphicon-remove"></i></button></td>
             </tr>
         </table>
     </div>

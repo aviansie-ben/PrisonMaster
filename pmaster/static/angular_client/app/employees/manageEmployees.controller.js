@@ -2,14 +2,15 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('ManageEmployeesController', manageEmployees);
 
-    function manageEmployees($uibModal) {
+    function manageEmployees($uibModal, employees) {
         var ctrl = this;
 
         ctrl.openViewCardModal = openViewCardModal;
         ctrl.openFireEmployeeModal = openFireEmployeeModal;
         ctrl.openAddEmployeeModal = openAddEmployeeModal;
 
-        ctrl.employees = [
+        ctrl.employees = employees.data;
+        [
             {
                 first_name: "John",
                 last_name: "Doe",
@@ -42,21 +43,37 @@
             }
         ];
 
-        function openViewCardModal() {
+        function openViewCardModal(ID) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/employees/viewCardModal.html',
                 controller: 'ViewCardModalController',
-                controllerAs: "ViewCardModalCtrl"
+                controllerAs: "ViewCardModalCtrl",
+                resolve: {
+                    accessCards: function(employeesResource) {
+                        return employeesResource.accessCards({id:ID}).$promise;
+                    },
+                    employeeID: function() {
+                        return ID;
+                    }
+                },
             });
         }
 
-        function openFireEmployeeModal() {
+        function openFireEmployeeModal(employee) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/employees/fireEmployeeModal.html',
                 controller: 'FireEmployeeModalController',
-                controllerAs: "FireEmployeeModalCtrl"
+                controllerAs: "FireEmployeeModalCtrl",
+                resolve: {
+                    employeeList: function() {
+                        return ctrl.employees;
+                    },
+                    employee: function() {
+                        return employee;
+                    }
+                },
             });
         }
 
@@ -65,7 +82,12 @@
                 animation: true,
                 templateUrl: '/static/angular_client/app/employees/addEmployeeModal.html',
                 controller: 'AddEmployeeModalController',
-                controllerAs: "AddEmployeeModalCtrl"
+                controllerAs: "AddEmployeeModalCtrl",
+                resolve: {
+                    employeeList: function() {
+                        return ctrl.employees;
+                    }
+                },
             });
         }
     }

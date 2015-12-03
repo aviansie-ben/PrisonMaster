@@ -2,12 +2,12 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('AddEmployeeModalController', addEmployeeModal);
 
-    function addEmployeeModal($uibModalInstance) {
+    function addEmployeeModal($uibModalInstance, employeesResource, employeeList) {
         var ctrl = this;
 
         ctrl.onSubmit = onSubmit;
         ctrl.cancel = close;
-        ctrl.model = {};
+        ctrl.model = {prison:1};
         ctrl.fields = [
             {
                 type: 'input',
@@ -31,7 +31,7 @@
                 }
             },
             {
-                type: 'input',
+                type: 'numInput',
                 key: 'security_clearance',
                 templateOptions: {
                     label: 'Security Clearance'
@@ -44,7 +44,10 @@
         }
 
         function onSubmit() {
-            $uibModalInstance.close();
+            employeesResource.save(ctrl.model).$promise.then(function(response) {
+                employeeList.push(response.data);
+                $uibModalInstance.close();
+            });
         }
     }
 })();

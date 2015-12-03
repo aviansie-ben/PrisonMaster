@@ -1,5 +1,5 @@
 <div class="col-md-1"></div>
-<div class="table-container portlet light, col-md-10">
+<div class="table-container portlet light, col-md-10" style="background:#FFFFFF; border-radius:5px;">
     <div class="portlet-title">
         <h1 style="text-align:center;">Employee Management</h1>
     </div>
@@ -17,8 +17,8 @@
             <td>{{employee.first_name}} {{employee.last_name}}</td>
             <td>{{employee.position}}</td>
             <td>{{employee.security_clearance}}</td>
-            <td style="width:0"><button class="btn btn-default" ng-click="EmployeesCtrl.openViewCardModal()" uib-popover="Access Cards" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
-            <td style="width:0"><button class="btn btn-danger" ng-click="EmployeesCtrl.openFireEmployeeModal()" uib-popover="Fire" popover-trigger="mouseenter"><i class="glyphicon glyphicon-fire"></i></button></td>
+            <td style="width:0"><button class="btn btn-default" ng-click="EmployeesCtrl.openViewCardModal(employee.id)" uib-popover="Access Cards" popover-trigger="mouseenter"><i class="glyphicon glyphicon-list"></i></button></td>
+            <td style="width:0"><button class="btn btn-danger" ng-click="EmployeesCtrl.openFireEmployeeModal(employee)" uib-popover="Fire" popover-trigger="mouseenter"><i class="glyphicon glyphicon-fire"></i></button></td>
         </tr>
     </table>
 </div>

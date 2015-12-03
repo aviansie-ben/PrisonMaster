@@ -10,6 +10,11 @@
         })
         .run(function(formlyConfig) {
             formlyConfig.setType({
+                name: 'numInput',
+                extends: 'input',
+                template: '<input type="number" class="form-control" ng-model="model[options.key]">'
+            });
+            formlyConfig.setType({
                 name: 'datepicker',
                 templateUrl: '/static/angular_client/app/layout/datepicker.html',
                 wrapper: ['bootstrapLabel', 'bootstrapHasError'],

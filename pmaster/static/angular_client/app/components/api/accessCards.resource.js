@@ -4,9 +4,11 @@
 
     function accessCards($resource) {
         return $resource(
-            "/api/accessCardsResource/:id/", {id:'@id'},
+            "/api/access_cards/:id/", {id:'@id'},
             {
-                "update": {method: "PATCH"},
+                'update': {method: "PUT"},
+                'list':  {method:'GET', url:"/api/access_cards/?fields=*"},
+                'options': {method:'OPTIONS'},
             });
     }
 })();

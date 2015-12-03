@@ -2,15 +2,15 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('ViewCardModalController', viewCardModal);
 
-    function viewCardModal($uibModalInstance, $uibModal) {
+    function viewCardModal($uibModalInstance, $uibModal, accessCardsResource, accessCards, employeeID) {
         var ctrl = this;
 
         ctrl.openAddCardModal = openAddCardModal;
         ctrl.removeCard = removeCard;
-        ctrl.ok = submit;
-        ctrl.cancel = close;
-
-        ctrl.cards = [
+        ctrl.ok = ok;
+        ctrl.cancel = cancel;
+        ctrl.cards = accessCards.data.access_cards;
+        [
             {
                 "expiry_date": "2016-02-01",
                 "id": 1,
@@ -43,19 +43,34 @@
                 animation: true,
                 templateUrl: '/static/angular_client/app/employees/addCardModal.html',
                 controller: 'AddCardModalController',
-                controllerAs: "AddCardModalCtrl"
+                controllerAs: "AddCardModalCtrl",
+                resolve: {
+                    employeeID: function() {
+                        return employeeID;
+                    },
+                    cardList: function() {
+                        return ctrl.cards;
+                    }
+                },
             });
         }
 
-        function removeCard(i) {
-            ctrl.cards.splice(i, 1);
+        function removeCard(ID) {
+            accessCardsResource.delete({id:ID}).$promise.then(function(response) {
+                for (var i = 0 ; i < ctrl.cards.length ; i++) {
+                    if (ctrl.cards[i].id == ID) {
+                        ctrl.cards.splice(i, 1);
+                        break;
+                    }
+                }
+            });
         }
 
-        function submit() {
+        function ok() {
             $uibModalInstance.close();
         }
 
-        function close() {
+        function cancel() {
             $uibModalInstance.dismiss('cancel');
         }
     }
