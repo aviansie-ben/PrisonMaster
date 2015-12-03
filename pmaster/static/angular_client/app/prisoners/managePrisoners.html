@@ -15,7 +15,7 @@
         <tr ng-repeat="prisoner in PrisonersCtrl.prisoners">
             <td>{{prisoner.first_name}} {{prisoner.last_name}}</td>
             <td>{{prisoner.cell.number}}</td>
-            <td style="width:0"><button class="btn btn-success" ng-click="PrisonersCtrl.moveModal()" uib-popover="Move to" popover-trigger="mouseenter"><i class="glyphicon glyphicon-arrow-right"></i></button></td>
+            <td style="width:0"><button class="btn btn-success" ng-click="PrisonersCtrl.moveModal(prisoner)" uib-popover="Move to" popover-trigger="mouseenter"><i class="glyphicon glyphicon-arrow-right"></i></button></td>
             <td>{{prisoner.id}}</td>
             <td style="width:0"><button class="btn btn-danger" ng-click="PrisonersCtrl.isolateModal(prisoner)" uib-popover="Isolate from" popover-trigger="mouseenter"><i class="glyphicon glyphicon-ban-circle"></i></button></td>
             <td style="width:0"><button class="btn btn-primary" ng-click="PrisonersCtrl.cellmatesModal(prisoner)" uib-popover="Cellmates" popover-trigger="mouseenter"><i class="glyphicon glyphicon-user"></i></button></td>

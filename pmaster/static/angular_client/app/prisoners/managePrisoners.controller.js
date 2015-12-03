@@ -115,12 +115,17 @@
             });
         }
 
-        function openMove() {
+        function openMove(prisoner) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/prisoners/movePrisonerModal.html',
                 controller: 'MovePrisonerModalController',
-                controllerAs: "MvModalCtrl"
+                controllerAs: "MvModalCtrl",
+                resolve: {
+                    prisoner: function() {
+                        return prisoner;
+                    }
+                }
             });
         }
 
