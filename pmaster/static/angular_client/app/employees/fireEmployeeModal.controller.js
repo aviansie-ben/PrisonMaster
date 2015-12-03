@@ -17,8 +17,8 @@
                         break;
                     }
                 }
+                $uibModalInstance.close();
             });
-            $uibModalInstance.close();
         }
 
         function close() {
