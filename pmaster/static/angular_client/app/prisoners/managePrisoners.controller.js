@@ -12,22 +12,22 @@
 
         ctrl.prisoners = prisoners.data;
 
-        function openIsolate(prisoner) {
+        function openIsolate(ID) {
             $uibModal.open({
                 animation: true,
                 templateUrl: '/static/angular_client/app/prisoners/isolateModal.html',
                 controller: 'IsolateModalController',
                 controllerAs: 'IsoModalCtrl',
                 resolve: {
-                    prisoner: function() {
-                        return prisoner;
+                    prisoner: function(prisonersResource) {
+                        return prisonersResource.isolationList({id:ID}).$promise;
                     },
                     prisonerOptions: function() {
                         // generate a list for mutliCheckbox
                         var l = [];
                         for (var i = 0; i < ctrl.prisoners.length; i++) {
                             // don't allow prisoners to be isolated from themselves
-                            if (prisoner.id != ctrl.prisoners[i].id) {
+                            if (ID != ctrl.prisoners[i].id) {
                                 var p = {};
                                 p.name = ctrl.prisoners[i].first_name + " " + ctrl.prisoners[i].last_name;
                                 p.value = ctrl.prisoners[i].id;
@@ -66,6 +66,9 @@
                 resolve: {
                     prisoner: function() {
                         return prisoner;
+                    },
+                    cellOptions: function(cellsResource) {
+                        return cellsResource.list().$promise;
                     }
                 }
             });

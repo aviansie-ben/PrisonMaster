@@ -15,7 +15,7 @@
         ctrl.unisolatePrisoner = unisolatePrisoner;
 
         function submitPrisoner() {
-            accessCardsResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
+            cellsResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
                 ctrl.prisonerID = response.data.id;
                 console.log("Success!");
             });
