@@ -2,14 +2,18 @@
     'use strict';
     angular.module('prisonMaster.police').controller('PoliceAdministrationController', policeAdmin);
 
-    function policeAdmin($uibModal, prisoners) {
+    function policeAdmin($uibModal, $filter, prisoners) {
         var ctrl = this;
 
-        ctrl.isolateModal = openIsolate;
-        ctrl.cellmatesModal = openCellmates;
-        ctrl.moveModal = openMove;
-        ctrl.releaseModal = openRelease;
         ctrl.prisoners = checkCells(prisoners.data);
+
+        // lists for search box                     // selected in search box
+        ctrl.prisonerNames = prisonerNames();       ctrl.selectedName = undefined;
+        ctrl.prisonerIDs = prisonerIDs();           ctrl.selectedID = undefined;
+        ctrl.prisonerCells = prisonerCells();       ctrl.selectedCell = undefined;
+        ctrl.prisonerDates = prisonerDates();       ctrl.selectedDate = "";
+
+        ctrl.searchMatches = searchMatches;
 
         function checkCells(prisonersList) {
             for (var i = 0; i < prisonersList.length; i++) {
@@ -19,83 +23,45 @@
             return prisonersList;
         }
 
-        function openIsolate(ID) {
-            $uibModal.open({
-                animation: true,
-                templateUrl: '/static/angular_client/app/prisoners/isolateModal.html',
-                controller: 'IsolateModalController',
-                controllerAs: 'IsoModalCtrl',
-                resolve: {
-                    prisoner: function(prisonersResource) {
-                        return prisonersResource.isolationList({id:ID}).$promise;
-                    },
-                    prisonerOptions: function() {
-                        // generate a list for mutliCheckbox
-                        var l = [];
-                        for (var i = 0; i < ctrl.prisoners.length; i++) {
-                            // don't allow prisoners to be isolated from themselves
-                            if (ID != ctrl.prisoners[i].id) {
-                                var p = {};
-                                p.name = ctrl.prisoners[i].first_name + " " + ctrl.prisoners[i].last_name;
-                                p.value = ctrl.prisoners[i].id;
-                                l.push(p);
-                            }
-                        }
-                        return l;
-                    }
-                }
-            });
+        // generate a list of prisoner names
+        function prisonerNames() {
+            var l = [];
+            for (var i = 0; i < ctrl.prisoners.length; i++)
+                l.push(ctrl.prisoners[i].first_name + " " + ctrl.prisoners[i].last_name);
+            return l;
         }
 
-        function openCellmates(prisoner) {
-            $uibModal.open({
-                animation: true,
-                templateUrl: '/static/angular_client/app/prisoners/cellmatesModal.html',
-                controller: 'CellmatesModalController',
-                controllerAs: 'CmModalCtrl',
-                resolve: {
-                    prisoner: function() {
-                        return prisoner;
-                    },
-                    cellmates: function(prisonersResource) {
-                        return prisonersResource.cellmates({id:prisoner.id}).$promise;
-                    }
-                }
-            });
+        // generate a list of prisoner ids
+        function prisonerIDs() {
+            var l = [];
+            for (var i = 0; i < ctrl.prisoners.length; i++)
+                l.push(ctrl.prisoners[i].id);
+            return l;
         }
 
-        function openMove(prisoner) {
-            $uibModal.open({
-                animation: true,
-                templateUrl: '/static/angular_client/app/prisoners/movePrisonerModal.html',
-                controller: 'MovePrisonerModalController',
-                controllerAs: "MvModalCtrl",
-                resolve: {
-                    prisoner: function() {
-                        return prisoner;
-                    },
-                    cellOptions: function(cellsResource) {
-                        return cellsResource.list().$promise;
-                    }
-                }
-            });
+        // generate a list of prisoner cells
+        function prisonerCells() {
+            var l = [];
+            for (var i = 0; i < ctrl.prisoners.length; i++)
+                l.push(ctrl.prisoners[i].cell.label);
+            return l;
         }
 
-        function openRelease(prisoner) {
-            $uibModal.open({
-                animation: true,
-                templateUrl: '/static/angular_client/app/prisoners/releasePrisonerModal.html',
-                controller: 'ReleasePrisonerModalController',
-                controllerAs: "RelPrisonerModalCtrl",
-                resolve: {
-                    prisonerList: function() {
-                        return ctrl.prisoners;
-                    },
-                    prisoner: function() {
-                        return prisoner;
-                    }
-                }
-            });
+        // generate a list of prisoner release dates
+        function prisonerDates() {
+            var l = [];
+            for (var i = 0; i < ctrl.prisoners.length; i++)
+                l.push($filter('date')(ctrl.prisoners[i].release_date, 'mediumDate'));
+                //l.push(ctrl.prisoners[i].release_date);
+            return l;
+        }
+
+        // returns true if a match is found
+        function searchMatches(prisoner) {
+            return  prisoner.first_name + " " + prisoner.last_name == ctrl.selectedName ||
+                    prisoner.id == ctrl.selectedID ||
+                    prisoner.cell.label == ctrl.selectedCell ||
+                    $filter('date')(prisoner.release_date, 'mediumDate') == ctrl.selectedDate;
         }
     }
 })();

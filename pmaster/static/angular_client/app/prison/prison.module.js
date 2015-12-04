@@ -25,7 +25,18 @@
                     url: '/supervisor/manage/prison',
                     templateUrl: '/static/angular_client/app/prison/managePrison.html',
                     controller: 'ManagePrisonController',
-                    controllerAs: 'PrisonCtrl'
+                    controllerAs: 'PrisonCtrl',
+                    resolve: {
+                        accessPoints: function(accessPointsResource) {
+                            return accessPointsResource.list().$promise;
+                        }
+                    },
+                    onExit: function($stateParams) {
+                        window.clearInterval($stateParams.timer);
+                    },
+                    params: {
+                        timer: {}
+                    }
                 });
         });
 })();
