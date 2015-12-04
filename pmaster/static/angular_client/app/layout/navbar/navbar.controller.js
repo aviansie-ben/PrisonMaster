@@ -4,6 +4,5 @@
 
     function navBar() {
         var ctrl = this;
-
     }
 })();
