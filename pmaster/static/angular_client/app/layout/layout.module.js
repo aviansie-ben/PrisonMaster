@@ -35,6 +35,11 @@
                 }]
             });
             formlyConfig.setType({
+                name: 'timepicker',
+                template: '<uib-timepicker ng-model="model[options.key]" show-meridian="false"></uib-timepicker>',
+                wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+            });
+            formlyConfig.setType({
                 name: 'multiSelect',
                 extends: 'select',
                 template: '<select multiple class="form-control" ng-model="model[options.key]"></select>'
