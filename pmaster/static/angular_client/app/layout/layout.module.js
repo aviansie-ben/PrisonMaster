@@ -5,7 +5,14 @@
             $stateProvider
                 .state('home', {
                     url: '/home',
-                    templateUrl: '/static/angular_client/app/layout/home.html'
+                    views: {
+                        'main': {
+                            templateUrl: '/static/angular_client/app/layout/home.html'
+                        },
+                        'navBar': {
+                            templateUrl: '/static/angular_client/app/layout/navbar/homeNavbar.html'
+                        }
+                    }
                 });
         })
         .run(function(formlyConfig) {

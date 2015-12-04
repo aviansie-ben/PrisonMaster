@@ -5,12 +5,19 @@
             $stateProvider
                 .state('wardenManagePrison', {
                     url: '/warden/manage/prison',
-                    templateUrl: '/static/angular_client/app/prison/managePrison.html',
-                    controller: 'ManagePrisonController',
-                    controllerAs: 'PrisonCtrl',
-                    resolve: {
-                        accessPoints: function(accessPointsResource) {
-                            return accessPointsResource.list().$promise;
+                    views: {
+                        'main': {
+                            templateUrl: '/static/angular_client/app/prison/managePrison.html',
+                            controller: 'ManagePrisonController',
+                            controllerAs: 'PrisonCtrl',
+                            resolve: {
+                                accessPoints: function(accessPointsResource) {
+                                    return accessPointsResource.list().$promise;
+                                }
+                            }
+                        },
+                        'navBar': {
+                            templateUrl: '/static/angular_client/app/layout/navbar/wardenNavbar.html'
                         }
                     },
                     onExit: function($stateParams) {
@@ -23,12 +30,19 @@
             $stateProvider
                 .state('supervisorManagePrison', {
                     url: '/supervisor/manage/prison',
-                    templateUrl: '/static/angular_client/app/prison/managePrison.html',
-                    controller: 'ManagePrisonController',
-                    controllerAs: 'PrisonCtrl',
-                    resolve: {
-                        accessPoints: function(accessPointsResource) {
-                            return accessPointsResource.list().$promise;
+                    views: {
+                        'main@': {
+                            templateUrl: '/static/angular_client/app/prison/managePrison.html',
+                            controller: 'ManagePrisonController',
+                            controllerAs: 'PrisonCtrl',
+                            resolve: {
+                                accessPoints: function(accessPointsResource) {
+                                    return accessPointsResource.list().$promise;
+                                }
+                            }
+                        },
+                        'navBar@': {
+                            templateUrl: '/static/angular_client/app/layout/navbar/supervisorNavbar.html'
                         }
                     },
                     onExit: function($stateParams) {

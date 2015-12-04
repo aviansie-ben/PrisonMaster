@@ -5,14 +5,21 @@
             $stateProvider
                 .state('manageEmployees', {
                     url: '/warden/manage/employees',
-                    templateUrl: '/static/angular_client/app/employees/manageEmployees.html',
-                    controller: 'ManageEmployeesController',
-                    controllerAs: 'EmployeesCtrl',
-                    resolve: {
-                        employees: function(employeesResource) {
-                            return employeesResource.list().$promise;
+                    views: {
+                        'main': {
+                            templateUrl: '/static/angular_client/app/employees/manageEmployees.html',
+                            controller: 'ManageEmployeesController',
+                            controllerAs: 'EmployeesCtrl',
+                            resolve: {
+                                employees: function(employeesResource) {
+                                    return employeesResource.list().$promise;
+                                }
+                            }
+                        },
+                        'navBar': {
+                            templateUrl: '/static/angular_client/app/layout/navbar/wardenNavbar.html'
                         }
-                    },
+                    }
                 });
         });
 })();

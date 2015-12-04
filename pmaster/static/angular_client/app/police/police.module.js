@@ -5,14 +5,21 @@
             $stateProvider
                 .state('policeAdministration', {
                     url: '/police/admin',
-                    templateUrl: '/static/angular_client/app/police/policeAdmin.html',
-                    controller: 'PoliceAdministrationController',
-                    controllerAs: 'PoliceCtrl',
-                    resolve: {
-                        prisoners: function(prisonersResource) {
-                            return prisonersResource.list().$promise;
+                    views: {
+                        'main': {
+                            templateUrl: '/static/angular_client/app/police/policeAdmin.html',
+                            controller: 'PoliceAdministrationController',
+                            controllerAs: 'PoliceCtrl',
+                            resolve: {
+                                prisoners: function(prisonersResource) {
+                                    return prisonersResource.list().$promise;
+                                }
+                            }
+                        },
+                        'navBar': {
+                            templateUrl: '/static/angular_client/app/layout/navbar/policeNavbar.html'
                         }
-                    },
+                    }
                 });
         });
 })();
