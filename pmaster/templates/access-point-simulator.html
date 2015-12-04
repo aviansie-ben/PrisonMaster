@@ -40,8 +40,8 @@
                         
                         $.each(data.data.schedule, function(i, s) {
                             schedule.push({
-                                open: Date.parse("1970-01-01T" + s.open) / 1000,
-                                close: Date.parse("1970-01-01T" + s.close) / 1000,
+                                open: Date.parse("1970-01-01T" + s.open + "Z") / 1000,
+                                close: Date.parse("1970-01-01T" + s.close + "Z") / 1000,
                             });
                         });
                         
