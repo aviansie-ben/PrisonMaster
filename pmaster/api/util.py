@@ -217,6 +217,9 @@ class ModelEntity(Entity):
         f = self.fields[field]
         val = getattr(self.entity, field)
         
+        if val is None:
+            return None
+        
         if issubclass(f.type, ModelEntity):
             if isinstance(val, list):
                 val = [ f.type(lv) for lv in val ]
