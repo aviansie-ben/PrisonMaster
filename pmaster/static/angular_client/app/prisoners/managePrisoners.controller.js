@@ -13,7 +13,7 @@
 
         function checkCells(prisonersList) {
             for (var i = 0; i < prisonersList.length; i++) {
-                if (prisonersList[i].cell.id === 1) prisonersList[i].cell.label = "Unassigned";
+                if (prisonersList[i].cell === null) prisonersList[i].cell = { id: null, label: "Unassigned" };
                 else prisonersList[i].cell.label = prisonersList[i].cell.number;
             }
             return prisonersList;
