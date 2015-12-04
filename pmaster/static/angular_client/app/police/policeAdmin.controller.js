@@ -5,23 +5,16 @@
     function policeAdmin($uibModal, $filter, prisoners) {
         var ctrl = this;
 
-        ctrl.prisoners = checkCells(prisoners.data);
+        ctrl.prisoners = prisoners.data;
+        ctrl.openAddPrisonerModal = openAddPrisonerModal;
 
         // lists for search box                     // selected in search box
         ctrl.prisonerNames = prisonerNames();       ctrl.selectedName = undefined;
         ctrl.prisonerIDs = prisonerIDs();           ctrl.selectedID = undefined;
-        ctrl.prisonerCells = prisonerCells();       ctrl.selectedCell = undefined;
+        ctrl.prisonerPrisons = prisonerPrisons();   ctrl.selectedPrison = undefined;
         ctrl.prisonerDates = prisonerDates();       ctrl.selectedDate = "";
 
         ctrl.searchMatches = searchMatches;
-
-        function checkCells(prisonersList) {
-            for (var i = 0; i < prisonersList.length; i++) {
-                if (prisonersList[i].cell.id === 1) prisonersList[i].cell.label = "Unassigned";
-                else prisonersList[i].cell.label = prisonersList[i].cell.number;
-            }
-            return prisonersList;
-        }
 
         // generate a list of prisoner names
         function prisonerNames() {
@@ -39,11 +32,18 @@
             return l;
         }
 
-        // generate a list of prisoner cells
-        function prisonerCells() {
+        // generate a list of prisoner prisons
+        /*
+         * NOTE: I am using "cells" as a replacement for prisons until this
+         *       is passed in with the API (I don't know how to do it easily).
+         *       Simply uncomment the lines in prisonerPrisons(), searchMatches(),
+         *       and the HTML file to update this.
+         */
+        function prisonerPrisons() {
             var l = [];
             for (var i = 0; i < ctrl.prisoners.length; i++)
-                l.push(ctrl.prisoners[i].cell.label);
+                l.push(ctrl.prisoners[i].cell.id);
+                //l.push(ctrl.prisoners[i].prison.name);
             return l;
         }
 
@@ -52,7 +52,6 @@
             var l = [];
             for (var i = 0; i < ctrl.prisoners.length; i++)
                 l.push($filter('date')(ctrl.prisoners[i].release_date, 'mediumDate'));
-                //l.push(ctrl.prisoners[i].release_date);
             return l;
         }
 
@@ -60,8 +59,18 @@
         function searchMatches(prisoner) {
             return  prisoner.first_name + " " + prisoner.last_name == ctrl.selectedName ||
                     prisoner.id == ctrl.selectedID ||
-                    prisoner.cell.label == ctrl.selectedCell ||
+                    prisoner.cell.number == ctrl.selectedPrison ||
+                    //prisoner.prison.name == ctrl.selectedPrison ||
                     $filter('date')(prisoner.release_date, 'mediumDate') == ctrl.selectedDate;
+        }
+
+        function openAddPrisonerModal() {
+            $uibModal.open({
+                animation: true,
+                templateUrl: '/static/angular_client/app/police/addPrisonerModal.html',
+                controller: 'AddPrisonerModalController',
+                controllerAs: "AddPrisonerModalCtrl",
+            });
         }
     }
 })();
