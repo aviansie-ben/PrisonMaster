@@ -50,6 +50,8 @@ class AccessPointEntity(ModelEntity):
                         if not ap.disabled:
                             ap.disable()
                             ap.lock()
+        else:
+            ModelEntity.set_field(self, name, value)
 
 class AccessLogEntity(ModelEntity):
     model = AccessLog
@@ -70,7 +72,7 @@ from pmaster.api.schedule import ScheduleEntity
 AccessPointEntity.fields = {
     'id': EntityField(int, settable=False),
     'url': EntityField(str, settable=False),
-    'status': EntityField(str),
+    'status': EntityField(str, required=False),
     'label': EntityField(str, required=False),
     'security_clearance': EntityField(int),
     'prison': EntityField(PrisonEntity),
