@@ -3,16 +3,16 @@
     <div class="portlet-title">
         <h1 style="text-align:center;">Login</h1>
     </div>
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" style="border-bottom: hidden">
         <tr>
             <td style="width: 33%;" ng-style="wStyle"><a ng-mouseover="wStyle={'background-color':'#7C7C7C'}" ng-mouseleave="wStyle={}" ui-sref="wardenManagePrison"><img src="/static/img/warden.png" alt="Warden" width="100%"></a></td>
             <td style="width: 33%;" ng-style="sStyle"><a ng-mouseover="sStyle={'background-color':'#7C7C7C'}" ng-mouseleave="sStyle={}" ui-sref="supervisorManagePrison"><img src="/static/img/supervisor.png" alt="Supervisor" width="100%"></a></td>
             <td style="width: 33%;" ng-style="pStyle"><a ng-mouseover="pStyle={'background-color':'#7C7C7C'}" ng-mouseleave="pStyle={}" ui-sref="policeAdministration"><img src="/static/img/police.png" alt="Police" width="100%"></a></td>
         </tr>
         <tr style="font-size: 1.15em; font-weight: bold; font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #333; text-align: center;">
-            <td>Warden</td>
-            <td>Security Supervisor</td>
-            <td>Police</td>
+            <td style="border-left: hidden">Warden</td>
+            <td style="border-left: hidden; border-right: hidden">Security Supervisor</td>
+            <td style="border-right: hidden">Police</td>
         </tr>
     </table>
 </div>
