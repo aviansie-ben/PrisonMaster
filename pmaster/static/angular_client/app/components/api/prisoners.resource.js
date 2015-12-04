@@ -10,7 +10,7 @@
                 'options': {method:'OPTIONS'},
                 'isolate': {method:'PATCH', transformRequest:isoTransform},
                 'unisolate': {method:'PATCH', transformRequest:unisoTransform},
-                'list':  {method:'GET', url:"/api/prisoners/?fields=*,cell.number"},
+                'list':  {method:'GET', url:"/api/prisoners/?fields=*,cell.number,cell.id"},
                 'isolationList': {method:'GET', url:"/api/prisoners/:id/?fields=id,first_name,last_name,isolated_prisoners.first_name,isolated_prisoners.last_name,isolated_prisoners.id", params:{id:'@id'}},
                 'cellmates': {method:'GET', url:"/api/prisoners/:id/?fields=cell.prisoners.id,cell.prisoners.first_name,cell.prisoners.last_name", params:{id:'@id'}, transformResponse:transformCellmates, isArray:true}
             });

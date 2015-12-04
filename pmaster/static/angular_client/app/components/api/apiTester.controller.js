@@ -15,7 +15,7 @@
         ctrl.unisolatePrisoner = unisolatePrisoner;
 
         function submitPrisoner() {
-            cellsResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
+            prisonersResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
                 ctrl.prisonerID = response.data.id;
                 console.log("Success!");
             });
@@ -28,7 +28,7 @@
         }
 
         function prisonerOptions() {
-            employeesResource.options().$promise.then(function(response) {
+            prisonersResource.options().$promise.then(function(response) {
                 ctrl.prisonerJSON = angular.toJson(response);
                 console.log("Success!");
             });

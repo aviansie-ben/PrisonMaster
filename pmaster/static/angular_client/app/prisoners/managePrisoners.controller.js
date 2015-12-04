@@ -9,8 +9,15 @@
         ctrl.cellmatesModal = openCellmates;
         ctrl.moveModal = openMove;
         ctrl.releaseModal = openRelease;
+        ctrl.prisoners = checkCells(prisoners.data);
 
-        ctrl.prisoners = prisoners.data;
+        function checkCells(prisonersList) {
+            for (var i = 0; i < prisonersList.length; i++) {
+                if (prisonersList[i].cell.id === 1) prisonersList[i].cell.label = "Unassigned";
+                else prisonersList[i].cell.label = prisonersList[i].cell.number;
+            }
+            return prisonersList;
+        }
 
         function openIsolate(ID) {
             $uibModal.open({

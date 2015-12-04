@@ -7,7 +7,7 @@
 
             $stateProvider
                 .state('testAPI', {
-                    url: '/api/test',
+                    url: '/api/test/',
                     templateUrl: '/static/angular_client/app/components/api/apiTester.html',
                     controller: 'ApiTesterController',
                     controllerAs: 'ApiCtrl'
