@@ -8,7 +8,6 @@
         ctrl.openAddCardModal = openAddCardModal;
         ctrl.removeCard = removeCard;
         ctrl.ok = ok;
-        ctrl.cancel = cancel;
         ctrl.cards = accessCards.data.access_cards;
 
         function openAddCardModal() {
@@ -41,10 +40,6 @@
 
         function ok() {
             $uibModalInstance.close();
-        }
-
-        function cancel() {
-            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

@@ -8,19 +8,14 @@
         ctrl.accessPoint = accessPoint;
         ctrl.logs = accessPoint.access_logs;
         ctrl.deleteLog = deleteLog;
-        ctrl.ok = submit;
-        ctrl.cancel = close;
+        ctrl.ok = ok;
 
         function deleteLog(i) {
             ctrl.logs.splice(i, 1);
         }
 
-        function submit() {
+        function ok() {
             $uibModalInstance.close();
-        }
-
-        function close() {
-            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

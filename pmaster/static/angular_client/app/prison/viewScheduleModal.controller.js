@@ -10,7 +10,6 @@
         ctrl.openAddSchedModal = openAddSchedModal;
         ctrl.deleteSched = deleteSched;
         ctrl.ok = ok;
-        ctrl.cancel = close;
 
         function openAddSchedModal() {
             $uibModal.open({
@@ -32,10 +31,6 @@
 
         function ok() {
             $uibModalInstance.close();
-        }
-
-        function close() {
-            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

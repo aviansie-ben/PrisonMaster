@@ -7,15 +7,10 @@
 
         ctrl.prisoner = prisoner;
         ctrl.cellmates = cellmates;
-        ctrl.ok = submit;
-        ctrl.cancel = close;
+        ctrl.ok = ok;
 
-        function submit() {
+        function ok() {
             $uibModalInstance.close();
-        }
-
-        function close() {
-            $uibModalInstance.dismiss('cancel');
         }
     }
 })();
