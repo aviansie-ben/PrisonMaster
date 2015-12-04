@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h3 class="modal-title">Schedule for {{ViewSchedModalCtrl.accessPoint.label}}</h3>
+</div>
+<div class="modal-body">
+    <div class="table-container portlet light">
+        <table style="vertical-align: bottom;" class="table table-striped table-bordered">
+            <thead style="font-size: 1.2em;">
+                <th>Time to Open</th>
+                <th>Time to Close</th>
+                <th>
+                    <button style="float:right;" class="btn btn-success" ng-click="ViewSchedModalCtrl.openAddSchedModal()" popover-placement="left" uib-popover="Add Schedule" popover-trigger="mouseenter"><i class="glyphicon glyphicon-plus"></i></button>
+                </th>
+            </thead>
+            <tr ng-repeat="schedule in ViewSchedModalCtrl.schedules">
+                <td>{{schedule.time_open | date:"HH:mm"}}</td>
+                <td>{{schedule.time_close | date:"HH:mm"}}</td>
+                <td style="width:0"><button style="float:right;" class="btn btn-default" ng-click="ViewSchedModalCtrl.deleteSched(schedule.id, $index)" popover-placement="left" uib-popover="Delete Schedule" popover-trigger="mouseenter"><i style="color: #C22F2B;" class="glyphicon glyphicon-remove"></i></button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ViewSchedModalCtrl.ok()">OK</button>
+</div>

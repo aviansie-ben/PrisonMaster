@@ -1,0 +1,25 @@
+<div class="col-md-1"></div>
+<div class="table-container, col-md-10" style="background:#FFFFFF; border-radius:5px;">
+    <div class="portlet-title">
+        <h1 style="text-align:center;">Employee Management</h1>
+    </div>
+    <table style="vertical-align: bottom;" class="table table-striped table-bordered">
+        <thead style="font-size: 1.15em;">
+            <th>Name</th>
+            <th>Position</th>
+            <th>Security Clearance</th>
+            <th></th>
+            <th>
+                <button class="btn btn-success" ng-click="EmployeesCtrl.openAddEmployeeModal()" popover-placement="left" uib-popover="Add Employee" popover-trigger="mouseenter"><i class="glyphicon glyphicon-plus"></i></button>
+            </th>
+        </thead>
+        <tr ng-repeat="employee in EmployeesCtrl.employees">
+            <td>{{employee.first_name}} {{employee.last_name}}</td>
+            <td>{{employee.position}}</td>
+            <td>{{employee.security_clearance}}</td>
+            <td style="width:0"><button class="btn btn-default" ng-click="EmployeesCtrl.openViewCardModal(employee.id)" uib-popover="Access Cards" popover-trigger="mouseenter"><i class="glyphicon glyphicon-credit-card"></i></button></td>
+            <td style="width:0"><button class="btn btn-danger" ng-click="EmployeesCtrl.openFireEmployeeModal(employee)" uib-popover="Fire" popover-trigger="mouseenter"><i class="glyphicon glyphicon-fire"></i></button></td>
+        </tr>
+    </table>
+</div>
+<div class="col-md-1"></div>
