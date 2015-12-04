@@ -2,7 +2,7 @@
     'use strict';
     angular.module('prisonMaster.api').controller('ApiTesterController', apiTester);
 
-    function apiTester(employeesResource, prisonersResource, prisonsResource, cellsResource, accessCardsResource, schedulesResource) {
+    function apiTester(accessPointsResource, employeesResource, prisonersResource, prisonsResource, cellsResource, accessCardsResource, schedulesResource) {
         var ctrl = this;
 
         ctrl.prisonerJSON = "";
@@ -15,20 +15,20 @@
         ctrl.unisolatePrisoner = unisolatePrisoner;
 
         function submitPrisoner() {
-            prisonersResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
+            accessPointsResource.save(ctrl.prisonerJSON).$promise.then(function(response) {
                 ctrl.prisonerID = response.data.id;
                 console.log("Success!");
             });
         }
 
         function updatePrisoner() {
-            prisonersResource.update({id:ctrl.prisonerID}, ctrl.prisonerJSON).$promise.then(function(response) {
+            accessPointsResource.update({id:ctrl.prisonerID}, ctrl.prisonerJSON).$promise.then(function(response) {
                 console.log("Success!");
             });
         }
 
         function prisonerOptions() {
-            prisonersResource.options().$promise.then(function(response) {
+            accessPointsResource.options().$promise.then(function(response) {
                 ctrl.prisonerJSON = angular.toJson(response);
                 console.log("Success!");
             });
