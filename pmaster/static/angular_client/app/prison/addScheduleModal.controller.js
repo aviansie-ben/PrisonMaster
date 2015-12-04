@@ -2,15 +2,16 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('AddScheduleModalController', addScheduleModal);
 
-    function addScheduleModal($uibModalInstance, scheduleList) {
+    function addScheduleModal($uibModalInstance, schedulesResource, scheduleList, apID) {
         var ctrl = this;
 
         ctrl.scheduleList = scheduleList;
         ctrl.onSubmit = onSubmit;
         ctrl.cancel = close;
         ctrl.model = {
-            time_open: "1970-01-01T07:00:08.000Z",
-            time_close: "1970-01-01T07:00:08.000Z"
+            time_open: "1970-01-01T00:00:00.000Z",
+            time_close: "1970-01-01T00:00:00.000Z",
+            access_point: apID
         };
         ctrl.fields = [
             {
@@ -36,7 +37,10 @@
         }
 
         function onSubmit() {
-            ctrl.cancel();
+            schedulesResource.save(ctrl.model).$promise.then(function(response) {
+                ctrl.scheduleList.push(response.data);
+                $uibModalInstance.close();
+            });
         }
     }
 })();

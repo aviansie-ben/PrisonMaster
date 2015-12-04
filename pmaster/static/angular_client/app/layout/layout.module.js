@@ -43,7 +43,7 @@
             });
             formlyConfig.setType({
                 name: 'timepicker',
-                template: '<uib-timepicker ng-model="model[options.key]" show-meridian="false"></uib-timepicker>',
+                template: '<uib-timepicker ng-model="model[options.key]" show-meridian="false" datetimepicker-neutral-timezone></uib-timepicker>',
                 wrapper: ['bootstrapLabel', 'bootstrapHasError'],
             });
             formlyConfig.setType({

@@ -2,11 +2,11 @@
     'use strict';
     angular.module('prisonMaster.prison').controller('ViewScheduleModalController', viewScheduleModal);
 
-    function viewScheduleModal($uibModalInstance, $uibModal, accessPoint) {
+    function viewScheduleModal($uibModalInstance, $uibModal, schedulesResource, accessPoint, schedules) {
         var ctrl = this;
 
         ctrl.accessPoint = accessPoint;
-        ctrl.schedules = accessPoint.schedules;
+        ctrl.schedules = schedules.data.schedules;
         ctrl.openAddSchedModal = openAddSchedModal;
         ctrl.deleteSched = deleteSched;
         ctrl.ok = ok;
@@ -20,13 +20,18 @@
                 resolve: {
                     scheduleList: function() {
                         return ctrl.schedules;
+                    },
+                    apID: function () {
+                        return ctrl.accessPoint.id;
                     }
                 },
             });
         }
 
-        function deleteSched(i) {
-            ctrl.schedules.splice(i, 1);
+        function deleteSched(ID, i) {
+            schedulesResource.delete({id:ID}).$promise.then(function (response) {
+                ctrl.schedules.splice(i, 1);
+            });
         }
 
         function ok() {

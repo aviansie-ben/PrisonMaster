@@ -10,7 +10,6 @@
                 <th>Security</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th></th>
             </thead>
             <tr ng-repeat="log in LogModalCtrl.logs">
                 <td>{{log.access_card.employee.first_name}} {{log.access_card.employee.last_name}}</td>
@@ -18,7 +17,6 @@
                 <td>{{log.access_card.security_clearance}}</td>
                 <td>{{log.timestamp | date: "mediumDate"}}</td>
                 <td>{{log.timestamp | date: "HH:mm:ss"}}</td>
-                <td style="width:0"><button style="float:right;" class="btn btn-default" ng-click="LogModalCtrl.deleteLog($index)" popover-placement="left" uib-popover="Delete Log" popover-trigger="mouseenter"><i style="color: #C22F2B;" class="glyphicon glyphicon-remove"></i></button></td>
             </tr>
         </table>
     </div>
