@@ -12,7 +12,7 @@
         ctrl.prisonerNames = prisonerNames();       ctrl.selectedName = "";
         ctrl.prisonerPrisons = prisonerPrisons();   ctrl.selectedPrison = "";
         ctrl.prisonerDates = prisonerDates();       ctrl.selectedDate = "";
-
+        ctrl.deselect = deselect;
         ctrl.searchMatches = searchMatches;
 
         // generate a list of prisoner names
@@ -34,6 +34,19 @@
                 }
             }
             return l;
+        }
+
+        function deselect(thing) {
+            if (thing === "name") {
+                ctrl.selectedPrison = "";
+                ctrl.selectedDate = "";
+            } else if(thing ==="date") {
+                ctrl.selectedName = "";
+                ctrl.selectedPrison = "";
+            } else {
+                ctrl.selectedDate = "";
+                ctrl.selectedName = "";
+            }
         }
 
         // generate a list of prisoner release dates

@@ -12,10 +12,10 @@
             <th style="width:0"><button style="float:right;" class="btn btn-success" ng-click="PoliceCtrl.openAddPrisonerModal()" popover-placement="left" uib-popover="Add Prisoner" popover-trigger="mouseenter"><i class="glyphicon glyphicon-plus"></i></button></th>
         </thead>
         <tr>
-            <td><input type="text" ng-model="PoliceCtrl.selectedName" uib-typeahead="name for name in PoliceCtrl.prisonerNames | filter:$viewValue | limitTo:8" class="form-control"></td>
+            <td><input type="text" ng-model="PoliceCtrl.selectedName" uib-typeahead="name for name in PoliceCtrl.prisonerNames | filter:$viewValue | limitTo:8" class="form-control" typeahead-on-select="PoliceCtrl.deselect('name')"></td>
             <td></td>
-            <td><input type="text" ng-model="PoliceCtrl.selectedPrison" uib-typeahead="prison as prison.name for prison in PoliceCtrl.prisonerPrisons | filter:$viewValue | limitTo:8" class="form-control"></td>
-            <td colspan="2"><input type="text" ng-model="PoliceCtrl.selectedDate" uib-typeahead="date for date in PoliceCtrl.prisonerDates | filter:$viewValue | limitTo:8" class="form-control"></td>
+            <td><input type="text" ng-model="PoliceCtrl.selectedPrison" uib-typeahead="prison as prison.name for prison in PoliceCtrl.prisonerPrisons | filter:$viewValue | limitTo:8" class="form-control" typeahead-on-select="PoliceCtrl.deselect('prison')"></td>
+            <td colspan="2"><input type="text" ng-model="PoliceCtrl.selectedDate" uib-typeahead="date for date in PoliceCtrl.prisonerDates | filter:$viewValue | limitTo:8" class="form-control" typeahead-on-select="PoliceCtrl.deselect('date')"></td>
         </tr>
         <tr ng-repeat="prisoner in PoliceCtrl.prisoners" ng-show="PoliceCtrl.searchMatches(prisoner)">
             <td>{{prisoner.first_name}} {{prisoner.last_name}}</td>
