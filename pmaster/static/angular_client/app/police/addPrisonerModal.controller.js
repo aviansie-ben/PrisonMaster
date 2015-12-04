@@ -2,12 +2,12 @@
     'use strict';
     angular.module('prisonMaster.employees').controller('AddPrisonerModalController', addPrisonerModal);
 
-    function addPrisonerModal($uibModalInstance) {
+    function addPrisonerModal($uibModalInstance, prisonersResource, prison) {
         var ctrl = this;
 
         ctrl.onSubmit = onSubmit;
         ctrl.cancel = close;
-        ctrl.model = {prison: "Alcatraz Maximum Security"};
+        ctrl.model = {prison: 1, prisonName: prison.data.name};
         ctrl.fields = [
             {
                 className: "col-xs-6",
@@ -36,13 +36,13 @@
             {
                 className: "col-xs-6",
                 type: 'input',
-                key: 'prison',
+                key: 'prisonName',
                 templateOptions: {
                     label: 'Prison'
                 },
                 // force the prison name to be pre-defined
                 expressionProperties: {
-                    'templateOptions.disabled': 'model.prison'
+                    'templateOptions.disabled': 'model.prisonName'
                 }
             }
         ];
@@ -52,7 +52,10 @@
         }
 
         function onSubmit() {
-            $uibModalInstance.close();
+            delete ctrl.model.prisonName;
+            prisonersResource.save(ctrl.model).$promise.then(function(response) {
+                $uibModalInstance.close();
+            });
         }
     }
 })();

@@ -12,7 +12,7 @@
                             controllerAs: 'PoliceCtrl',
                             resolve: {
                                 prisoners: function(prisonersResource) {
-                                    return prisonersResource.list().$promise;
+                                    return prisonersResource.policeList().$promise;
                                 }
                             }
                         },

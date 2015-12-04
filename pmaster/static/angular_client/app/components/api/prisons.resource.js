@@ -7,6 +7,7 @@
             "/api/prisons/:id/", {id:'@id'},
             {
                 "update": {method: "PATCH"},
+                "list": {method:"GET", url:"/api/prisons/?fields=*"}
             });
     }
 })();

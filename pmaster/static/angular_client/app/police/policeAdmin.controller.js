@@ -9,9 +9,8 @@
         ctrl.openAddPrisonerModal = openAddPrisonerModal;
 
         // lists for search box                     // selected in search box
-        ctrl.prisonerNames = prisonerNames();       ctrl.selectedName = undefined;
-        ctrl.prisonerIDs = prisonerIDs();           ctrl.selectedID = undefined;
-        ctrl.prisonerPrisons = prisonerPrisons();   ctrl.selectedPrison = undefined;
+        ctrl.prisonerNames = prisonerNames();       ctrl.selectedName = "";
+        ctrl.prisonerPrisons = prisonerPrisons();   ctrl.selectedPrison = "";
         ctrl.prisonerDates = prisonerDates();       ctrl.selectedDate = "";
 
         ctrl.searchMatches = searchMatches;
@@ -24,26 +23,16 @@
             return l;
         }
 
-        // generate a list of prisoner ids
-        function prisonerIDs() {
-            var l = [];
-            for (var i = 0; i < ctrl.prisoners.length; i++)
-                l.push(ctrl.prisoners[i].id);
-            return l;
-        }
-
         // generate a list of prisoner prisons
-        /*
-         * NOTE: I am using "cells" as a replacement for prisons until this
-         *       is passed in with the API (I don't know how to do it easily).
-         *       Simply uncomment the lines in prisonerPrisons(), searchMatches(),
-         *       and the HTML file to update this.
-         */
         function prisonerPrisons() {
             var l = [];
-            for (var i = 0; i < ctrl.prisoners.length; i++)
-                l.push(ctrl.prisoners[i].cell.id);
-                //l.push(ctrl.prisoners[i].prison.name);
+            var ids = [];
+            for (var i = 0; i < ctrl.prisoners.length; i++) {
+                if (ids.indexOf(ctrl.prisoners[i].prison.id) < 0) {
+                    l.push(ctrl.prisoners[i].prison);
+                    ids.push(ctrl.prisoners[i].prison.id);
+                }
+            }
             return l;
         }
 
@@ -59,8 +48,7 @@
         function searchMatches(prisoner) {
             return  prisoner.first_name + " " + prisoner.last_name == ctrl.selectedName ||
                     prisoner.id == ctrl.selectedID ||
-                    prisoner.cell.number == ctrl.selectedPrison ||
-                    //prisoner.prison.name == ctrl.selectedPrison ||
+                    prisoner.prison.id == ctrl.selectedPrison.id ||
                     $filter('date')(prisoner.release_date, 'mediumDate') == ctrl.selectedDate;
         }
 
@@ -70,6 +58,11 @@
                 templateUrl: '/static/angular_client/app/police/addPrisonerModal.html',
                 controller: 'AddPrisonerModalController',
                 controllerAs: "AddPrisonerModalCtrl",
+                resolve: {
+                    prison: function(prisonsResource) {
+                        return prisonsResource.get({id:1}).$promise;
+                    }
+                }
             });
         }
     }
